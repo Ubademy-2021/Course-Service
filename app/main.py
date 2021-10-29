@@ -1,7 +1,7 @@
 import os
 import uvicorn
 from fastapi import FastAPI, status
-from app.adapters.database.database import engine
+#from app.adapters.database.database import engine
 from app.core.logger import logger
 
 # Create app with FAST API
