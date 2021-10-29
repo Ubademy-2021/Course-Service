@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy.orm import relationship
 from app.adapters.database.database import Base
 from app.domain.suscriptions.suscription import SuscriptionCreate
 
@@ -11,6 +12,8 @@ class SuscriptionDTO(Base):
     id = Column(Integer, primary_key=True, index=True)
     description = Column(String, unique=True)
     price = Column(Float)
+
+    courses = relationship("SuscriptionCourseDTO", back_populates="suscription")
 
     def initWithSuscriptionCreate(self, suscription: SuscriptionCreate):
 

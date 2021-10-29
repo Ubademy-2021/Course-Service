@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, Time, Float
+from sqlalchemy.orm import relationship
 from app.adapters.database.database import Base
 from app.domain.courses.course import CourseCreate
 import datetime
@@ -16,6 +17,8 @@ class CourseDTO(Base):
     duration = Column(Time)
     inscriptionPrice = Column(Float)
     status = Column(String)
+
+    suscriptions = relationship("SuscriptionCourseDTO", back_populates="course")
 
     def initWithCourseCreate(self, course: CourseCreate):
 
