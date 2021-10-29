@@ -7,7 +7,7 @@ import datetime
 
 
 class CourseDTO(Base):
-    __tablename__ = "Course"
+    __tablename__ = "course"
 
     id = Column(Integer, primary_key=True, index=True)
     courseName = Column(String, unique=True)

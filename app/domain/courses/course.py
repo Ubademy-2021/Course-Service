@@ -17,7 +17,6 @@ class CourseCreate(CourseBase):
             or not self.categoryId
             or not self.duration
             or not self.inscriptionPrice
-            or not self.status
         )
         return not isNotComplete
 
