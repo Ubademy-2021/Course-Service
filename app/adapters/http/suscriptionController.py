@@ -3,6 +3,8 @@ from app.adapters.database.suscriptionsModel import SuscriptionDTO
 from app.adapters.http.util.suscriptionUtil import SuscriptionUtil
 from app.domain.suscriptions.suscription import SuscriptionCreate, Suscription
 from app.domain.suscriptions.suscriptionRepository import SuscriptionRepository
+from app.domain.suscriptionCourses.suscriptionCourse import SuscriptionCourse
+from app.domain.suscriptionCourses.suscriptionCourseRepository import SuscriptionCourseRepository
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
@@ -48,3 +50,14 @@ def read_suscription(suscription_id: int, db: Session = Depends(get_db)):
     repo = SuscriptionRepository(db)
     db_suscription = SuscriptionUtil.check_id_exists(repo, suscription_id)
     return db_suscription
+
+
+@router.post("/suscriptions/course", response_model=SuscriptionCourse)
+def create_user_category(suscriptionCourse: SuscriptionCourse, db: Session = Depends(get_db)):
+    logger.info("Adding course to suscription")
+    if not suscriptionCourse.courseId or not suscriptionCourse.suscriptionId:
+        logger.warn("Required fields are not complete")
+        raise HTTPException(status_code=400, detail="Required fields are not complete")
+    repo = SuscriptionCourseRepository(db)
+    SuscriptionUtil.check_suscription_course(db, suscriptionCourse)
+    return repo.create_suscription_course(suscriptionCourse)
