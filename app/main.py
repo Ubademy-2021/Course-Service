@@ -2,6 +2,7 @@ import os
 import uvicorn
 from fastapi import FastAPI, status
 from app.adapters.database.database import engine
+from app.adapters.http import courseController, suscriptionController
 from app.core.logger import logger
 
 # Create app with FAST API
@@ -14,6 +15,9 @@ logger.info("Starting User-Service")
 async def root():
     logger.warn("This is an testing endpoint, not intended for productive environment")
     return "pong"
+
+app.include_router(courseController.router, prefix="/api")
+app.include_router(suscriptionController.router, prefix="/api")
 
 if __name__ == "__main__":
     port = os.environ.get('PORT', 5000)

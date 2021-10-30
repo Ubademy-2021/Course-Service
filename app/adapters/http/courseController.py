@@ -3,6 +3,7 @@ from app.adapters.database.coursesModel import CourseDTO
 from app.adapters.http.util.courseUtil import CourseUtil
 from app.domain.courses.course import CourseCreate, Course
 from app.domain.courses.courseRepository import CourseRepository
+from app.domain.exceptions import CourseNotFoundError
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
@@ -28,16 +29,30 @@ def create_course(course: CourseCreate, db: Session = Depends(get_db)):
     if not course.isComplete():
         logger.warn("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
-    crud = CourseRepository(db)
-    CourseUtil.check_coursename(crud, course.courseName)
-    return crud.create_course(course=course)
+    repo = CourseRepository(db)
+    CourseUtil.check_coursename(repo, course.courseName)
+    return repo.create_course(course=course)
+
+
+@router.put("/courses/{course_id}", response_model=Course)
+def update_course(course_id: int, course_updated: CourseCreate, db: Session = Depends(get_db)):
+    logger.info("Updating course with id " + str(course_id))
+    repo = CourseRepository(db)
+
+    try:
+        course_updated = repo.update_course(course_id, course_updated)
+    except CourseNotFoundError as e:
+        raise HTTPException(status_code=404, detail=e.message)
+
+    logger.info("Course course with id " + str(course_id) + " updates successfully")
+    return course_updated
 
 
 @router.get("/courses", response_model=List[Course])
 def read_courses(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     logger.info("Getting courses list")
-    crud = CourseRepository(db)
-    courses = crud.get_courses(skip=skip, limit=limit)
+    repo = CourseRepository(db)
+    courses = repo.get_courses(skip=skip, limit=limit)
     logger.debug("Getting " + str(courses.count(CourseDTO)) + " courses")
     return courses
 
@@ -45,21 +60,21 @@ def read_courses(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
 @router.get("/courses/{course_id}", response_model=Course)
 def read_course(course_id: int, db: Session = Depends(get_db)):
     logger.info("Getting course with id = " + str(course_id))
-    crud = CourseRepository(db)
-    db_course = CourseUtil.check_id_exists(crud, course_id)
+    repo = CourseRepository(db)
+    db_course = CourseUtil.check_id_exists(repo, course_id)
     return db_course
 
 
 @router.post("/courses/cancel/{course_id}", response_model=Course)
 def cancel_course(course_id: int, db: Session = Depends(get_db)):
     logger.info("Creating course " + str(course_id))
-    crud = CourseRepository(db)
-    db_course = CourseUtil.check_id_exists(crud, course_id)
+    repo = CourseRepository(db)
+    db_course = CourseUtil.check_id_exists(repo, course_id)
     if(db_course.status == 'Cancelled'):
         logger.warn("Course " + str(course_id) + " already blocked")
         raise HTTPException(
             status_code=400, detail=("Course " + str(course_id) + " already blocked")
         )
     db_course.status = 'Cancelled'
-    crud.update_course_with_id(db_course)
+    repo.update_course_with_id(db_course)
     return db_course

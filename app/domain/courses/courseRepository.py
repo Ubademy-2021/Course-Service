@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from app.domain.courses.course import CourseCreate, Course
 from app.adapters.database.coursesModel import CourseDTO
+from app.domain.exceptions import CourseNotFoundError
 
 
 class CourseRepository:
@@ -23,6 +24,22 @@ class CourseRepository:
         self.session.commit()
         self.session.refresh(session_course)
         return session_course
+
+    def update_course(self, db_course_id: int, course_updated: CourseCreate):
+        # Get the existing data
+        db_course = self.session.query(CourseDTO).filter(CourseDTO.id == db_course_id).one_or_none()
+
+        if db_course is None:
+            raise CourseNotFoundError()
+
+        # Update model class variable from requested fields
+        for var, value in vars(course_updated).items():
+            setattr(db_course, var, value) if value or str(value) == 'False' else None
+
+        self.session.add(db_course)
+        self.session.commit()
+        self.session.refresh(db_course)
+        return db_course
 
     def update_course_with_id(self, course_updated: Course):
         # Only use with course gotten from database
