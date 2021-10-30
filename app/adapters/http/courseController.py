@@ -1,5 +1,6 @@
 from app.adapters.database.database import SessionLocal
 from app.adapters.database.coursesModel import CourseDTO
+from app.adapters.database.suscriptionCoursesModel import SuscriptionCourseDTO
 from app.adapters.http.util.courseUtil import CourseUtil
 from app.domain.courses.course import CourseCreate, Course
 from app.domain.courses.courseRepository import CourseRepository
@@ -8,6 +9,7 @@ from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from app.core.logger import logger
+from app.domain.suscriptionCourses.suscriptionCourseRepository import SuscriptionCourseRepository
 
 router = APIRouter(tags=["courses"])
 
@@ -63,6 +65,18 @@ def read_course(course_id: int, db: Session = Depends(get_db)):
     repo = CourseRepository(db)
     db_course = CourseUtil.check_id_exists(repo, course_id)
     return db_course
+
+
+@router.get("/courses/{suscriptionId}", response_model=List[Course])
+def read_courses_from_suscription(
+    suscriptionId, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
+):
+    logger.info("Getting course list of suscription " + str(suscriptionId))
+    crud = SuscriptionCourseRepository(db)
+    courses = crud.get_cou(suscriptionId, skip=skip, limit=limit)
+    logger.debug("Getting " + str(courses.count(SuscriptionCourseDTO)) + " courses")
+    return list(map(SuscriptionCourseDTO.getCourse, courses))
+
 
 
 @router.post("/courses/cancel/{course_id}", response_model=Course)

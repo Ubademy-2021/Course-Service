@@ -18,3 +18,6 @@ class SuscriptionCourseDTO(Base):
 
         self.courseId = suscriptionCourse.courseId
         self.suscriptionId = suscriptionCourse.suscriptionId
+
+    def getCourse(self):
+        return self.course
