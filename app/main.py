@@ -1,14 +1,17 @@
 import os
 import uvicorn
 from fastapi import FastAPI, status
+from app.adapters.database.coursesModel import Base
 from app.adapters.database.database import engine
 from app.adapters.http import courseController, suscriptionController
 from app.core.logger import logger
 
+Base.metadata.create_all(bind=engine)
+
 # Create app with FAST API
 app = FastAPI(debug=True)
 
-logger.info("Starting User-Service")
+logger.info("Starting Course-Service")
 
 
 @app.get('/ping', status_code=status.HTTP_200_OK)

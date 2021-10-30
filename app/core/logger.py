@@ -34,7 +34,7 @@ class LogConfig(BaseModel):
         "file": {
             "formatter": "file",
             "class": "logging.FileHandler",
-            "filename": "user-service.log",
+            "filename": "course-service.log",
         },
     }
     loggers = {
