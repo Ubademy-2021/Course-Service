@@ -20,14 +20,13 @@ DATABASE_URL = config(
   default=f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}"
 )
 """
-"""
-POSTGRES_USER = "dnelosexrgszoz"
-POSTGRES_PASSWORD = "d0bcea04baf4cb598c261aea150aed55871cc7e65778b78c29b6201f98ddc98a"
-POSTGRES_SERVER = "ec2-34-194-123-31.compute-1.amazonaws.com"
-POSTGRES_PORT = "5432"
-POSTGRES_DB = "dcmlmhd3ipa6a5"
 
-# DATABASE_URL = "postgres://dnelosexrgszoz:d0bcea04baf4cb598c261aea150aed55871cc7e65778b78c29b6201f98ddc98a@ec2-34-194-123-31.compute-1.amazonaws.com:5432/dcmlmhd3ipa6a5"
+POSTGRES_USER = "ocgerntcffbank"
+POSTGRES_PASSWORD = "80d6b711e44a83cf460fe26f0fbe883e3f37571e2220f216811a30f40e95bfe9"
+POSTGRES_SERVER = "ec2-35-169-204-98.compute-1.amazonaws.com"
+POSTGRES_PORT = "5432"
+POSTGRES_DB = "dfl4kcs7cejp7b"
+
+# DATABASE_URL = "    postgres://ocgerntcffbank:80d6b711e44a83cf460fe26f0fbe883e3f37571e2220f216811a30f40e95bfe9@ec2-35-169-204-98.compute-1.amazonaws.com:5432/dfl4kcs7cejp7b"
 
 DATABASE_URL = f"postgres://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}"
-"""
