@@ -10,6 +10,9 @@ class SuscriptionRepository:
     def get_suscription(self, suscription_id: int):
         return self.session.query(SuscriptionDTO).filter(SuscriptionDTO.id == suscription_id).first()
 
+    def get_suscription_by_description(self, desription: str):
+        return self.session.query(SuscriptionDTO).filter(SuscriptionDTO.description == desription).first()
+
     def get_suscriptions(self, skip: int = 0, limit: int = 100):
         return self.session.query(SuscriptionDTO).offset(skip).limit(limit).all()
 
