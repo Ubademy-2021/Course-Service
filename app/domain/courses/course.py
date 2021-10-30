@@ -11,6 +11,8 @@ class CourseBase(BaseModel):
 
 
 class CourseCreate(CourseBase):
+    ownerId: int
+
     def isComplete(self):
         isNotComplete = (
             not self.courseName

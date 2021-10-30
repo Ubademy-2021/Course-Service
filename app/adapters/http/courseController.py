@@ -2,7 +2,7 @@ from app.adapters.database.database import SessionLocal
 from app.adapters.database.coursesModel import CourseDTO
 from app.adapters.database.suscriptionCoursesModel import SuscriptionCourseDTO
 from app.adapters.http.util.courseUtil import CourseUtil
-from app.domain.courses.course import CourseCreate, Course
+from app.domain.courses.course import CourseBase, CourseCreate, Course
 from app.domain.courses.courseRepository import CourseRepository
 from app.domain.exceptions import CourseNotFoundError
 from fastapi import Depends, APIRouter, HTTPException
@@ -37,7 +37,7 @@ def create_course(course: CourseCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/courses/{course_id}", response_model=Course)
-def update_course(course_id: int, course_updated: CourseCreate, db: Session = Depends(get_db)):
+def update_course(course_id: int, course_updated: CourseBase, db: Session = Depends(get_db)):
     logger.info("Updating course with id " + str(course_id))
     repo = CourseRepository(db)
 
@@ -76,7 +76,6 @@ def read_courses_from_suscription(
     courses = crud.get_cou(suscriptionId, skip=skip, limit=limit)
     logger.debug("Getting " + str(courses.count(SuscriptionCourseDTO)) + " courses")
     return list(map(SuscriptionCourseDTO.getCourse, courses))
-
 
 
 @router.post("/courses/cancel/{course_id}", response_model=Course)
