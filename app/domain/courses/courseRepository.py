@@ -10,6 +10,9 @@ class CourseRepository:
     def get_course(self, course_id: int):
         return self.session.query(CourseDTO).filter(CourseDTO.id == course_id).first()
 
+    def get_course_by_name(self, courseName: str):
+        return self.session.query(CourseDTO).filter(CourseDTO.courseName == courseName).first()
+
     def get_courses(self, skip: int = 0, limit: int = 100):
         return self.session.query(CourseDTO).offset(skip).limit(limit).all()
 
