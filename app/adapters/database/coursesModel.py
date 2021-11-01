@@ -12,7 +12,6 @@ class CourseDTO(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     courseName = Column(String, unique=True)
-    categoryId = Column(Integer)
     createdDate = Column(DateTime)
     duration = Column(Time)
     inscriptionPrice = Column(Float)
@@ -23,7 +22,6 @@ class CourseDTO(Base):
     def initWithCourseCreate(self, course: CourseCreate):
 
         self.courseName = course.courseName
-        self.categoryId = course.categoryId
         self.createdDate = datetime.datetime.now()
         self.duration = course.duration
         self.inscriptionPrice = course.inscriptionPrice

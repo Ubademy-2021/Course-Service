@@ -67,13 +67,13 @@ def read_course(course_id: int, db: Session = Depends(get_db)):
     return db_course
 
 
-@router.get("/courses/{suscriptionId}", response_model=List[Course])
+@router.get("/courses/suscription/{suscriptionId}", response_model=List[Course])
 def read_courses_from_suscription(
     suscriptionId, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 ):
     logger.info("Getting course list of suscription " + str(suscriptionId))
     crud = SuscriptionCourseRepository(db)
-    courses = crud.get_cou(suscriptionId, skip=skip, limit=limit)
+    courses = crud.get_courses_by_suscription(suscriptionId, skip=skip, limit=limit)
     logger.debug("Getting " + str(courses.count(SuscriptionCourseDTO)) + " courses")
     return list(map(SuscriptionCourseDTO.getCourse, courses))
 
@@ -84,9 +84,9 @@ def cancel_course(course_id: int, db: Session = Depends(get_db)):
     repo = CourseRepository(db)
     db_course = CourseUtil.check_id_exists(repo, course_id)
     if(db_course.status == 'Cancelled'):
-        logger.warn("Course " + str(course_id) + " already blocked")
+        logger.warn("Course " + str(course_id) + " already cancelled")
         raise HTTPException(
-            status_code=400, detail=("Course " + str(course_id) + " already blocked")
+            status_code=400, detail=("Course " + str(course_id) + " already cancelled")
         )
     db_course.status = 'Cancelled'
     repo.update_course_with_id(db_course)
