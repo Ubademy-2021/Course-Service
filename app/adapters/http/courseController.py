@@ -1,6 +1,7 @@
 from app.adapters.database.database import SessionLocal
 from app.adapters.database.coursesModel import CourseDTO
 from app.adapters.database.suscriptionCoursesModel import SuscriptionCourseDTO
+from app.adapters.http.util.collaboratorUtil import CollaboratorUtil
 from app.adapters.http.util.courseUtil import CourseUtil
 from app.domain.courses.course import CourseBase, CourseCreate, Course
 from app.domain.courses.courseRepository import CourseRepository
@@ -33,7 +34,9 @@ def create_course(course: CourseCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = CourseRepository(db)
     CourseUtil.check_coursename(repo, course.courseName)
-    return repo.create_course(course=course)
+    db_course = repo.create_course(course=course)
+    CollaboratorUtil.createOwner(db, db_course, course.ownerId)
+    return db_course
 
 
 @router.put("/courses/{course_id}", response_model=Course)
@@ -69,7 +72,7 @@ def read_course(course_id: int, db: Session = Depends(get_db)):
 
 @router.get("/courses/suscription/{suscriptionId}", response_model=List[Course])
 def read_courses_from_suscription(
-    suscriptionId, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
+    suscriptionId: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 ):
     logger.info("Getting course list of suscription " + str(suscriptionId))
     crud = SuscriptionCourseRepository(db)

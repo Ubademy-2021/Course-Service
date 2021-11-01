@@ -18,6 +18,7 @@ class CourseDTO(Base):
     status = Column(String)
 
     suscriptions = relationship("SuscriptionCourseDTO", back_populates="course")
+    collaborators = relationship("CollaboratorDTO", back_populates="course")
 
     def initWithCourseCreate(self, course: CourseCreate):
 
