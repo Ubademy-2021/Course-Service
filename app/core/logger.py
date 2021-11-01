@@ -43,4 +43,4 @@ class LogConfig(BaseModel):
 
 
 dictConfig(LogConfig().dict())
-logger = logging.getLogger("User-Service-Log")
+logger = logging.getLogger("Course-Service-Log")
