@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "user-service"
+name = "course-service"
 version = "0.1.0"
 description = "Basic proyect with python3, FastAPI and Poetry"
 authors = ["Agustin Rojas <rojasagustin90@gmail.com>"]
