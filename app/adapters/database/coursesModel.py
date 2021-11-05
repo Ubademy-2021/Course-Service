@@ -19,6 +19,7 @@ class CourseDTO(Base):
 
     suscriptions = relationship("SuscriptionCourseDTO", back_populates="course")
     collaborators = relationship("CollaboratorDTO", back_populates="course")
+    inscriptions = relationship("CourseInscriptionDTO", back_populates="course")
 
     def initWithCourseCreate(self, course: CourseCreate):
 
