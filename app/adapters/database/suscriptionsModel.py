@@ -14,6 +14,7 @@ class SuscriptionDTO(Base):
     price = Column(Float)
 
     courses = relationship("SuscriptionCourseDTO", back_populates="suscription")
+    inscriptions = relationship("SuscriptionInscriptionDTO", back_populates="suscription")
 
     def initWithSuscriptionCreate(self, suscription: SuscriptionCreate):
 

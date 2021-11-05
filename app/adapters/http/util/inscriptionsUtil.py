@@ -1,12 +1,12 @@
 from typing import List
+from app.adapters.database.suscriptionInscriptionsModel import SuscriptionInscriptionDTO
 
-from sqlalchemy.orm.session import Session
-from app.adapters.database.courseInscriptionsModel import CourseInscriptionDTO
-from app.adapters.database.coursesModel import CourseDTO
 from app.domain.courseInscriptions.courseInscription import CourseInscriptionCreate
 from app.domain.courseInscriptions.courseInscriptionRepository import CourseInscriptionRepository
 from app.core.logger import logger
 from fastapi import HTTPException
+from app.domain.suscriptionInscriptions.suscriptionInscription import SuscriptionInscription, SuscriptionInscriptionCreate
+from app.domain.suscriptionInscriptions.suscriptionInscriptionRepository import SuscriptionInscriptionRepository
 
 
 class CourseInscriptionUtil:
@@ -27,3 +27,20 @@ class CourseInscriptionUtil:
                 status_code=400, detail="Inscription does not exist"
             )
         return db_courseInscription
+
+
+class SuscriptionInscriptionUtil:
+
+    def check_suscriptionInscription(suscriptionInscriptionRepository: SuscriptionInscriptionRepository, suscriptionInscription: SuscriptionInscriptionCreate):
+        db_suscriptionInscription = suscriptionInscriptionRepository.get_suscriptionInscription(suscriptionInscription.userId)
+        if db_suscriptionInscription:
+            logger.warn("Inscription already exists")
+            raise HTTPException(
+                status_code=400, detail="Inscription already exists"
+            )
+
+    def makeDefaultSuscription(userId: int):
+        suscriptionInscription = SuscriptionInscriptionDTO()
+        suscriptionInscription.suscriptionId = 0
+        suscriptionInscription.userId = userId
+        return suscriptionInscription
