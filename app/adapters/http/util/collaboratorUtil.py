@@ -10,6 +10,7 @@ from app.core.logger import logger
 from fastapi import HTTPException
 
 from app.domain.courses.course import Course
+from app.domain.courses.courseRepository import CourseRepository
 
 
 class CollaboratorUtil:
@@ -20,6 +21,12 @@ class CollaboratorUtil:
         if not UserServiceUtil.checkUserExists(collaborator.userId):
             logger.error("User can not be add as a colaborator because it does not exist")
             raise HTTPException(status_code=400, detail="User does not exist")
+
+        courseRepo = CourseRepository(collaboratorRepository.session)
+        course = courseRepo.get_course(collaborator.courseId)
+        if not course:
+            logger.error("Course does not exist")
+            raise HTTPException(status_code=400, detail="Course does not exist")
 
         db_collaborator = collaboratorRepository.get_collaborator(collaborator.courseId, collaborator.userId)
         if db_collaborator:

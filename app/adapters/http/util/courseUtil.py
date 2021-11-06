@@ -1,3 +1,4 @@
+from app.domain.categories.categoryRepository import CategoryRepository
 from app.domain.courseCategories.courseCategory import CourseCategoryCreate
 from app.domain.courseCategories.courseCategoryRepository import CourseCategoryRepository
 from app.domain.courses.courseRepository import CourseRepository
@@ -23,6 +24,19 @@ class CourseUtil:
         return db_course
 
     def check_course_category(repo: CourseCategoryRepository, courseCategory: CourseCategoryCreate):
+
+        courseRepo = CourseRepository(repo.session)
+        course = courseRepo.get_course(courseCategory.courseId)
+        if not course:
+            logger.error("Course does not exist")
+            raise HTTPException(status_code=400, detail="Course does not exist")
+
+        categoryRepo = CategoryRepository(repo.session)
+        category = categoryRepo.get_category(courseCategory.categoryId)
+        if not category:
+            logger.error("Category does not exist")
+            raise HTTPException(status_code=400, detail="Category does not exist")
+
         db_cc = repo.get_courseCategory(courseCategory.courseId, courseCategory.categoryId)
         if db_cc:
             logger.warn("Category already added")

@@ -3,8 +3,10 @@ from app.adapters.database.suscriptionInscriptionsModel import SuscriptionInscri
 
 from app.domain.courseInscriptions.courseInscription import CourseInscriptionCreate
 from app.domain.courseInscriptions.courseInscriptionRepository import CourseInscriptionRepository
+from app.domain.suscriptions.suscriptionRepository import SuscriptionRepository
 from app.core.logger import logger
 from fastapi import HTTPException
+from app.domain.courses.courseRepository import CourseRepository
 from app.domain.suscriptionInscriptions.suscriptionInscription import SuscriptionInscription, SuscriptionInscriptionCreate
 from app.domain.suscriptionInscriptions.suscriptionInscriptionRepository import SuscriptionInscriptionRepository
 from app.adapters.http.util.userServiceUtil import UserServiceUtil
@@ -18,6 +20,12 @@ class CourseInscriptionUtil:
         if not UserServiceUtil.checkUserExists(courseInscription.userId):
             logger.error("User does not exist")
             raise HTTPException(status_code=400, detail="User does not exist")
+
+        courseRepo = CourseRepository(courseInscriptionRepository.session)
+        course = courseRepo.get_course(courseInscription.courseId)
+        if not course:
+            logger.error("Course does not exist")
+            raise HTTPException(status_code=400, detail="Course does not exist")
 
         db_courseInscription = courseInscriptionRepository.get_courseInscription(courseInscription.courseId, courseInscription.userId)
         if db_courseInscription:
@@ -44,6 +52,12 @@ class SuscriptionInscriptionUtil:
         if not UserServiceUtil.checkUserExists(suscriptionInscription.userId):
             logger.error("User does not exist")
             raise HTTPException(status_code=400, detail="User does not exist")
+
+        suscreptionRepo = SuscriptionRepository(suscriptionInscriptionRepository.session)
+        suscription = suscreptionRepo.get_suscription(suscriptionInscription.suscriptionId)
+        if not suscription:
+            logger.error("Suscription does not exist")
+            raise HTTPException(status_code=400, detail="Suscription does not exist")
 
         db_suscriptionInscription = suscriptionInscriptionRepository.get_suscriptionInscription(suscriptionInscription.userId)
         if db_suscriptionInscription:
