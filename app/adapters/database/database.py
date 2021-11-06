@@ -5,8 +5,6 @@ from app.core.config import DATABASE_URL, POSTGRES_SERVER
 from app.core.logger import logger
 
 
-# SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
-
 SQLALCHEMY_DATABASE_URL = DATABASE_URL
 
 
