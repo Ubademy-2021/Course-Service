@@ -26,7 +26,7 @@ def get_db():
 @router.post("/collaborators", response_model=Collaborator)
 def create_collaborator(collaborator: CollaboratorCreate, db: Session = Depends(get_db)):
     logger.info("Creating collaborator")
-    
+
     if not collaborator.isComplete():
         logger.warn("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
@@ -35,7 +35,6 @@ def create_collaborator(collaborator: CollaboratorCreate, db: Session = Depends(
     if not UserServiceUtil.checkUserExists(collaborator.userId):
         logger.error("User can not be add as a colaborator because it does not exist")
         raise HTTPException(status_code=400, detail="User does not exist")
-    
     repo = CollaboratorRepository(db)
     CollaboratorUtil.check_collaborator(repo, collaborator)
 
