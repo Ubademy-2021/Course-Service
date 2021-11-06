@@ -1,6 +1,7 @@
 from app.adapters.database.database import SessionLocal
 from app.adapters.database.courseInscriptionsModel import CourseInscriptionDTO
 from app.adapters.http.util.inscriptionsUtil import CourseInscriptionUtil, SuscriptionInscriptionUtil
+from app.adapters.http.util.userServiceUtil import UserServiceUtil
 from app.domain.courseInscriptions.courseInscription import CourseInscriptionCreate, CourseInscription
 from app.domain.courseInscriptions.courseInscriptionRepository import CourseInscriptionRepository
 from fastapi import Depends, APIRouter, HTTPException
@@ -73,6 +74,12 @@ def create_suscription_inscription(suscriptionInscription: SuscriptionInscriptio
 def read_user_suscription(user_id: int, db: Session = Depends(get_db)):
     logger.info("Getting suscription from user " + str(user_id))
     repo = SuscriptionInscriptionRepository(db)
+
+    logger.info("Checking if user exists in user service")
+    if not UserServiceUtil.checkUserExists(user_id):
+        logger.error("User does not exist")
+        raise HTTPException(status_code=400, detail="User does not exist")
+
     suscriptionInscription = repo.get_suscriptionInscription(user_id)
     if not suscriptionInscription:
         suscriptionInscription = SuscriptionInscriptionUtil.makeDefaultSuscription(user_id)
