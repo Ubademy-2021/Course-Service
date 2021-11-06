@@ -1,3 +1,5 @@
+from app.domain.courseCategories.courseCategory import CourseCategoryCreate
+from app.domain.courseCategories.courseCategoryRepository import CourseCategoryRepository
 from app.domain.courses.courseRepository import CourseRepository
 from app.core.logger import logger
 from fastapi import HTTPException
@@ -19,3 +21,11 @@ class CourseUtil:
             logger.warning("Course with id = " + str(course_id) + " not found")
             raise HTTPException(status_code=404, detail="Course not found")
         return db_course
+
+    def check_course_category(repo: CourseCategoryRepository, courseCategory: CourseCategoryCreate):
+        db_cc = repo.get_courseCategory(courseCategory.courseId, courseCategory.categoryId)
+        if db_cc:
+            logger.warn("Category already added")
+            raise HTTPException(
+                status_code=400, detail="Category already added"
+            )
