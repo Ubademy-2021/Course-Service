@@ -9,9 +9,10 @@ class CourseCategoryDTO(Base):
     __tablename__ = "courseCategory"
 
     courseId = Column(Integer, ForeignKey("course.id"), primary_key=True, index=True)
-    categoryId = Column(Integer, primary_key=True, index=True)
+    categoryId = Column(Integer, ForeignKey("category.id"), primary_key=True, index=True)
 
     course = relationship("CourseDTO", back_populates="categories")
+    category = relationship("CategoryDTO", back_populates="courses")
 
     def initWithCourseCategoryCreate(self, courseCategory: CourseCategoryCreate):
 
