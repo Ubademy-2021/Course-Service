@@ -1,0 +1,43 @@
+from app.adapters.database.database import SessionLocal
+from app.adapters.database.categoriesModel import CategoryDTO
+from app.domain.categories.category import Category, CategoryBase
+from app.domain.categories.categoryRepository import CategoryRepository
+from fastapi import Depends, APIRouter, HTTPException
+from sqlalchemy.orm import Session
+from typing import List
+from app.core.logger import logger
+from app.adapters.http.util.categoryUtil import CategoryUtil
+
+
+router = APIRouter(tags=["categories"])
+
+
+# Dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    except Exception as e:
+        logger.critical("Internal Error: " + e.__str__())
+    finally:
+        db.close()
+
+
+@router.get("/categories", response_model=List[Category])
+def read_categories(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    logger.info("Getting categories list")
+    repo = CategoryRepository(db)
+    categories = repo.get_categories(skip=skip, limit=limit)
+    logger.debug("Getting " + str(categories.count(CategoryDTO)) + " categories")
+    return categories
+
+
+@router.post("/categories", response_model=Category)
+def create_category(category: CategoryBase, db: Session = Depends(get_db)):
+    logger.info("Creating " + category.name + " category")
+    if not category.name:
+        logger.warn("Required fields are not complete")
+        raise HTTPException(status_code=400, detail="Required fields are not complete")
+    repo = CategoryRepository(db)
+    CategoryUtil.check_category(repo, category.name)
+    return repo.create_category(category=category)
