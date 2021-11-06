@@ -1,6 +1,7 @@
 from app.adapters.database.database import SessionLocal
 from app.adapters.database.collaboratorsModel import CollaboratorDTO
 from app.adapters.http.util.collaboratorUtil import CollaboratorUtil
+from app.adapters.http.util.userServiceUtil import UserServiceUtil
 from app.domain.collaborators.collaborator import CollaboratorCreate, Collaborator
 from app.domain.collaborators.collaboratorRepository import CollaboratorRepository
 from fastapi import Depends, APIRouter, HTTPException
@@ -25,11 +26,19 @@ def get_db():
 @router.post("/collaborators", response_model=Collaborator)
 def create_collaborator(collaborator: CollaboratorCreate, db: Session = Depends(get_db)):
     logger.info("Creating collaborator")
+    
     if not collaborator.isComplete():
         logger.warn("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
+
+    logger.info("Checking if user exists in user service")
+    if not UserServiceUtil.checkUserExists(collaborator.userId):
+        logger.error("User can not be add as a colaborator because it does not exist")
+        raise HTTPException(status_code=400, detail="User does not exist")
+    
     repo = CollaboratorRepository(db)
     CollaboratorUtil.check_collaborator(repo, collaborator)
+
     return repo.create_collaborator(collaborator=collaborator)
 
 
