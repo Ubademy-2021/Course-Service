@@ -1,3 +1,4 @@
+from app.adapters.http.util.courseUtil import CourseUtil
 from app.domain.suscriptionCourses.suscriptionCourse import SuscriptionCourse
 from app.domain.suscriptionCourses.suscriptionCourseRepository import SuscriptionCourseRepository
 from app.domain.suscriptions.suscriptionRepository import SuscriptionRepository
@@ -24,7 +25,20 @@ class SuscriptionUtil:
             raise HTTPException(status_code=404, detail="Suscription not found")
         return db_suscription
 
+    def check_suscription_exists(repo: SuscriptionRepository, id):
+        suscription = repo.get_suscription(id)
+        if not suscription:
+            logger.error("Suscription does not exist")
+            raise HTTPException(status_code=400, detail="Suscription does not exist")
+
     def check_suscription_course(db: Session, suscriptionCourse: SuscriptionCourse):
+
+        courseRepository = CourseRepository(db)
+        CourseUtil.check_course_exists(courseRepository, suscriptionCourse.courseId)
+
+        suscriptionRepository = SuscriptionRepository(db)
+        SuscriptionUtil.check_suscription_exists(suscriptionRepository, suscriptionCourse.suscriptionId)
+
         suscriptionCourseRepository = SuscriptionCourseRepository(db)
         db_suscription_course = suscriptionCourseRepository.get_suscription_course(
             suscriptionCourse.courseId, suscriptionCourse.suscriptionId
@@ -32,19 +46,3 @@ class SuscriptionUtil:
         if db_suscription_course:
             logger.warn("Suscription already has course")
             raise HTTPException(status_code=400, detail="Suscription already has course")
-        courseRepository = CourseRepository(db)
-        db_course = courseRepository.get_course(suscriptionCourse.courseId)
-        if not db_course:
-            logger.warn("Course " + str(suscriptionCourse.courseId) + " does not exist")
-            raise HTTPException(
-                status_code=400,
-                detail="Course " + str(suscriptionCourse.courseId) + " does not exist",
-            )
-        suscriptionRepository = SuscriptionRepository(db)
-        db_suscription = suscriptionRepository.get_suscription(suscriptionCourse.suscriptionId)
-        if not db_suscription:
-            logger.warn("Suscription " + str(suscriptionCourse.suscriptionId) + " does not exist")
-            raise HTTPException(
-                status_code=400,
-                detail="Suscription " + str(suscriptionCourse.suscriptionId) + " does not exist",
-            )

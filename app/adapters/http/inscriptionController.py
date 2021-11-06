@@ -75,10 +75,7 @@ def read_user_suscription(user_id: int, db: Session = Depends(get_db)):
     logger.info("Getting suscription from user " + str(user_id))
     repo = SuscriptionInscriptionRepository(db)
 
-    logger.info("Checking if user exists in user service")
-    if not UserServiceUtil.checkUserExists(user_id):
-        logger.error("User does not exist")
-        raise HTTPException(status_code=400, detail="User does not exist")
+    UserServiceUtil.check_user_exists(user_id)
 
     suscriptionInscription = repo.get_suscriptionInscription(user_id)
     if not suscriptionInscription:

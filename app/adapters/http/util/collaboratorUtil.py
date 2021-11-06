@@ -3,6 +3,7 @@ from typing import List
 from sqlalchemy.orm.session import Session
 from app.adapters.database.collaboratorsModel import CollaboratorDTO
 from app.adapters.database.coursesModel import CourseDTO
+from app.adapters.http.util.courseUtil import CourseUtil
 from app.domain.collaborators.collaborator import CollaboratorCreate
 from app.domain.collaborators.collaboratorRepository import CollaboratorRepository
 from app.adapters.http.util.userServiceUtil import UserServiceUtil
@@ -17,16 +18,10 @@ class CollaboratorUtil:
 
     def check_collaborator(collaboratorRepository: CollaboratorRepository, collaborator: CollaboratorCreate):
 
-        logger.info("Checking if user exists in user service")
-        if not UserServiceUtil.checkUserExists(collaborator.userId):
-            logger.error("User can not be add as a colaborator because it does not exist")
-            raise HTTPException(status_code=400, detail="User does not exist")
+        UserServiceUtil.check_user_exists(collaborator.userId)
 
         courseRepo = CourseRepository(collaboratorRepository.session)
-        course = courseRepo.get_course(collaborator.courseId)
-        if not course:
-            logger.error("Course does not exist")
-            raise HTTPException(status_code=400, detail="Course does not exist")
+        CourseUtil.check_course_exists(courseRepo, collaborator.courseId)
 
         db_collaborator = collaboratorRepository.get_collaborator(collaborator.courseId, collaborator.userId)
         if db_collaborator:
@@ -37,10 +32,7 @@ class CollaboratorUtil:
 
     def createOwner(db: Session, course: CourseDTO, ownerId: int):
 
-        logger.info("Checking if owner exists in user service")
-        if not UserServiceUtil.checkUserExists(ownerId):
-            logger.error("User can not be add as owner because it does not exist")
-            raise HTTPException(status_code=400, detail="User does not exist")
+        UserServiceUtil.check_user_exists(ownerId)
 
         collaborator = CollaboratorDTO()
         collaborator.courseId = course.id

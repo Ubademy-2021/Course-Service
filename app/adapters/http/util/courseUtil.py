@@ -1,3 +1,4 @@
+from app.adapters.http.util.categoryUtil import CategoryUtil
 from app.domain.categories.categoryRepository import CategoryRepository
 from app.domain.courseCategories.courseCategory import CourseCategoryCreate
 from app.domain.courseCategories.courseCategoryRepository import CourseCategoryRepository
@@ -23,19 +24,19 @@ class CourseUtil:
             raise HTTPException(status_code=404, detail="Course not found")
         return db_course
 
-    def check_course_category(repo: CourseCategoryRepository, courseCategory: CourseCategoryCreate):
-
-        courseRepo = CourseRepository(repo.session)
-        course = courseRepo.get_course(courseCategory.courseId)
+    def check_course_exists(repo: CourseRepository, id):
+        course = repo.get_course(id)
         if not course:
             logger.error("Course does not exist")
             raise HTTPException(status_code=400, detail="Course does not exist")
 
+    def check_course_category(repo: CourseCategoryRepository, courseCategory: CourseCategoryCreate):
+
+        courseRepo = CourseRepository(repo.session)
+        CourseUtil.check_course_exists(courseRepo, courseCategory.courseId)
+
         categoryRepo = CategoryRepository(repo.session)
-        category = categoryRepo.get_category(courseCategory.categoryId)
-        if not category:
-            logger.error("Category does not exist")
-            raise HTTPException(status_code=400, detail="Category does not exist")
+        CategoryUtil.check_category_exists(categoryRepo, courseCategory.categoryId)
 
         db_cc = repo.get_courseCategory(courseCategory.courseId, courseCategory.categoryId)
         if db_cc:

@@ -12,3 +12,9 @@ class CategoryUtil:
             raise HTTPException(
                 status_code=400, detail="Category " + category_name + " already exists"
             )
+
+    def check_category_exists(repo: CategoryRepository, id: int):
+        category = repo.get_category(id)
+        if not category:
+            logger.error("Category does not exist")
+            raise HTTPException(status_code=400, detail="Category does not exist")
