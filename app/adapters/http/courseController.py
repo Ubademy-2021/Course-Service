@@ -45,6 +45,8 @@ def create_course(course: CourseCreate, db: Session = Depends(get_db)):
 @router.put("/courses/{course_id}", response_model=Course)
 def update_course(course_id: int, course_updated: CourseBase, db: Session = Depends(get_db)):
     logger.info("Updating course with id " + str(course_id))
+
+    CourseUtil.check_coursename(db, course_updated.courseName)
     repo = CourseRepository(db)
 
     try:
