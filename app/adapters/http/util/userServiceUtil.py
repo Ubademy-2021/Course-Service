@@ -15,7 +15,7 @@ class UserServiceUtil:
         r = requests.get(url=url)
 
         if r.status_code != 200:
-            logger.warn("Error while getting categories")
+            logger.warning("Error while getting categories")
             raise HTTPException(status_code=400, detail="Error while getting categories")
 
         response = r.json()
@@ -34,7 +34,7 @@ class UserServiceUtil:
         r = requests.get(url=url)
 
         if r.status_code != 200:
-            logger.warn("User not found")
+            logger.warning("User not found")
             raise HTTPException(status_code=400, detail="User does not exist")
 
         # Return user

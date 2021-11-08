@@ -20,7 +20,7 @@ class CollaboratorUtil:
         collaboratorRepository = CollaboratorRepository(session)
         db_collaborator = collaboratorRepository.get_collaborator(collaborator.courseId, collaborator.userId)
         if db_collaborator:
-            logger.warn("Collaborator already exists")
+            logger.warning("Collaborator already exists")
             raise HTTPException(
                 status_code=400, detail="Collaborator already exists"
             )

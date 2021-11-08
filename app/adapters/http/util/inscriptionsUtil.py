@@ -23,7 +23,7 @@ class CourseInscriptionUtil:
         courseInscriptionRepository = CourseInscriptionRepository(session)
         db_courseInscription = courseInscriptionRepository.get_courseInscription(courseInscription.courseId, courseInscription.userId)
         if db_courseInscription:
-            logger.warn("Inscription already exists")
+            logger.warning("Inscription already exists")
             raise HTTPException(
                 status_code=400, detail="Inscription already exists"
             )
@@ -32,7 +32,7 @@ class CourseInscriptionUtil:
         courseInscriptionRepository = CourseInscriptionRepository(session)
         db_courseInscription = courseInscriptionRepository.get_courseInscription(courseInscription.courseId, courseInscription.userId)
         if not db_courseInscription:
-            logger.warn("Inscription does not exist")
+            logger.warning("Inscription does not exist")
             raise HTTPException(
                 status_code=400, detail="Inscription does not exist"
             )
@@ -50,7 +50,7 @@ class SuscriptionInscriptionUtil:
         suscriptionInscriptionRepository = SuscriptionInscriptionRepository(session)
         db_suscriptionInscription = suscriptionInscriptionRepository.get_suscriptionInscription(suscriptionInscription.userId)
         if db_suscriptionInscription:
-            logger.warn("Inscription already exists")
+            logger.warning("Inscription already exists")
             raise HTTPException(
                 status_code=400, detail="Inscription already exists"
             )

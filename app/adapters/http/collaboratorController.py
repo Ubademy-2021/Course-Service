@@ -27,7 +27,7 @@ def create_collaborator(collaborator: CollaboratorCreate, db: Session = Depends(
     logger.info("Creating collaborator")
 
     if not collaborator.isComplete():
-        logger.warn("Required fields are not complete")
+        logger.warning("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = CollaboratorRepository(db)
     CollaboratorUtil.check_collaborator(db, collaborator)

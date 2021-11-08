@@ -10,7 +10,7 @@ class CategoryUtil:
         categoryRepository = CategoryRepository(session)
         db_category = categoryRepository.get_category_by_name(category_name)
         if db_category:
-            logger.warn("Category " + category_name + " already exists")
+            logger.warning("Category " + category_name + " already exists")
             raise HTTPException(
                 status_code=400, detail="Category " + category_name + " already exists"
             )
@@ -19,5 +19,5 @@ class CategoryUtil:
         repo = CategoryRepository(session)
         category = repo.get_category(id)
         if not category:
-            logger.error("Category does not exist")
+            logger.warning("Category does not exist")
             raise HTTPException(status_code=400, detail="Category does not exist")

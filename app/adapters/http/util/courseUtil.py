@@ -18,7 +18,7 @@ class CourseUtil:
         courseRepository = CourseRepository(session)
         db_course = courseRepository.get_course_by_name(coursename)
         if db_course:
-            logger.warn("Coursename " + coursename + " already in use")
+            logger.warning("Coursename " + coursename + " already in use")
             raise HTTPException(
                 status_code=400, detail="Coursename " + coursename + " already in use"
             )
@@ -35,7 +35,7 @@ class CourseUtil:
         repo = CourseRepository(session)
         course = repo.get_course(id)
         if not course:
-            logger.error("Course does not exist")
+            logger.warning("Course does not exist")
             raise HTTPException(status_code=400, detail="Course does not exist")
 
     def check_course_category(session: Session, courseCategory: CourseCategoryCreate):
@@ -47,7 +47,7 @@ class CourseUtil:
         repo = CourseCategoryRepository(session)
         db_cc = repo.get_courseCategory(courseCategory.courseId, courseCategory.categoryId)
         if db_cc:
-            logger.warn("Category already added")
+            logger.warning("Category already added")
             raise HTTPException(
                 status_code=400, detail="Category already added"
             )

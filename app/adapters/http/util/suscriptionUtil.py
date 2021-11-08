@@ -13,7 +13,7 @@ class SuscriptionUtil:
         suscriptionRepository = SuscriptionRepository(session)
         db_suscription = suscriptionRepository.get_suscription_by_description(description)
         if db_suscription:
-            logger.warn("Description " + description + " already in use")
+            logger.warning("Description " + description + " already in use")
             raise HTTPException(
                 status_code=400, detail="Description " + description + " already in use"
             )
@@ -30,7 +30,7 @@ class SuscriptionUtil:
         repo = SuscriptionRepository(session)
         suscription = repo.get_suscription(id)
         if not suscription:
-            logger.error("Suscription does not exist")
+            logger.warning("Suscription does not exist")
             raise HTTPException(status_code=400, detail="Suscription does not exist")
 
     def check_suscription_course(session: Session, suscriptionCourse: SuscriptionCourse):
@@ -44,5 +44,5 @@ class SuscriptionUtil:
             suscriptionCourse.courseId, suscriptionCourse.suscriptionId
         )
         if db_suscription_course:
-            logger.warn("Suscription already has course")
+            logger.warning("Suscription already has course")
             raise HTTPException(status_code=400, detail="Suscription already has course")

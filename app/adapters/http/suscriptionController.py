@@ -28,7 +28,7 @@ def get_db():
 def create_suscription(suscription: SuscriptionCreate, db: Session = Depends(get_db)):
     logger.info("Creating suscription " + suscription.description)
     if not suscription.isComplete():
-        logger.warn("Required fields are not complete")
+        logger.warning("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = SuscriptionRepository(db)
     SuscriptionUtil.check_description(db, suscription.description)
@@ -55,7 +55,7 @@ def read_suscription(suscription_id: int, db: Session = Depends(get_db)):
 def create_user_category(suscriptionCourse: SuscriptionCourse, db: Session = Depends(get_db)):
     logger.info("Adding course to suscription")
     if not suscriptionCourse.courseId or not suscriptionCourse.suscriptionId:
-        logger.warn("Required fields are not complete")
+        logger.warning("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = SuscriptionCourseRepository(db)
     SuscriptionUtil.check_suscription_course(db, suscriptionCourse)

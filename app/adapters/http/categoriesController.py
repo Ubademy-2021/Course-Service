@@ -36,7 +36,7 @@ def read_categories(skip: int = 0, limit: int = 100, db: Session = Depends(get_d
 def create_category(category: CategoryBase, db: Session = Depends(get_db)):
     logger.info("Creating " + category.name + " category")
     if not category.name:
-        logger.warn("Required fields are not complete")
+        logger.warning("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = CategoryRepository(db)
     CategoryUtil.check_category(db, category.name)

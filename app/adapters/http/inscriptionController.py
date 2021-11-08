@@ -29,7 +29,7 @@ def get_db():
 def create_course_inscription(courseInscription: CourseInscriptionCreate, db: Session = Depends(get_db)):
     logger.info("Creating course inscription")
     if not courseInscription.isComplete():
-        logger.warn("Required fields are not complete")
+        logger.warning("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = CourseInscriptionRepository(db)
     CourseInscriptionUtil.check_courseInscription(db, courseInscription)
@@ -51,7 +51,7 @@ def cancel_course_inscription(courseInscription: CourseInscriptionCreate, db: Se
     repo = CourseInscriptionRepository(db)
     db_inscription = CourseInscriptionUtil.check_id_exists(db, courseInscription)
     if (db_inscription.status == 'Cancelled'):
-        logger.warn("Inscription already cancelled")
+        logger.warning("Inscription already cancelled")
         raise HTTPException(
             status_code=400, detail=("Inscription already cancelled")
         )
@@ -63,7 +63,7 @@ def cancel_course_inscription(courseInscription: CourseInscriptionCreate, db: Se
 def create_suscription_inscription(suscriptionInscription: SuscriptionInscriptionCreate, db: Session = Depends(get_db)):
     logger.info("Creating suscription inscription")
     if not suscriptionInscription.isComplete():
-        logger.warn("Required fields are not complete")
+        logger.warning("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = SuscriptionInscriptionRepository(db)
     SuscriptionInscriptionUtil.check_suscriptionInscription(db, suscriptionInscription)

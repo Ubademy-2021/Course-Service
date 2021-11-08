@@ -33,7 +33,7 @@ def get_db():
 def create_course(course: CourseCreate, db: Session = Depends(get_db)):
     logger.info("Creating course " + course.courseName)
     if not course.isComplete():
-        logger.warn("Required fields are not complete")
+        logger.warning("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = CourseRepository(db)
     CourseUtil.check_coursename(db, course.courseName)
@@ -91,7 +91,7 @@ def cancel_course(course_id: int, db: Session = Depends(get_db)):
     repo = CourseRepository(db)
     db_course = CourseUtil.check_id_exists(db, course_id)
     if(db_course.status == 'Cancelled'):
-        logger.warn("Course " + str(course_id) + " already cancelled")
+        logger.warning("Course " + str(course_id) + " already cancelled")
         raise HTTPException(
             status_code=400, detail=("Course " + str(course_id) + " already cancelled")
         )
@@ -104,7 +104,7 @@ def cancel_course(course_id: int, db: Session = Depends(get_db)):
 def add_category_to_course(courseCategory: CourseCategoryCreate, db: Session = Depends(get_db)):
     logger.info("Adding category to course")
     if not courseCategory.isComplete():
-        logger.warn("Required fields are not complete")
+        logger.warning("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = CourseCategoryRepository(db)
     CourseUtil.check_course_category(db, courseCategory)
