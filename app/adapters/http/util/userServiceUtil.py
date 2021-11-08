@@ -1,4 +1,4 @@
-from logging import log
+from typing import List
 
 from fastapi.exceptions import HTTPException
 from app.core.config import HEROKU_USER_SERVICE_BASE_URL
@@ -39,3 +39,22 @@ class UserServiceUtil:
 
         # Return user
         return r.json()[0]
+
+    def getActiveUsers():
+        logger.info("Getting all active users")
+
+        url = HEROKU_USER_SERVICE_BASE_URL + "/api/users/active"
+        r = requests.get(url=url)
+
+        if r.status_code != 200:
+            logger.warning("Request error")
+            raise HTTPException(status_code=400, detail="Request error")
+
+        # Return users
+        return r.json()
+
+    def getUserFromUsers(users: List, userId):
+        for user in users:
+            if user["id"] == userId:
+                print(user)
+                return user

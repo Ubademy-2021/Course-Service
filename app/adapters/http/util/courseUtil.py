@@ -58,7 +58,7 @@ class CourseUtil:
         recommendations = {}
 
         courseRepo = CourseRepository(session)
-        courses = courseRepo.get_all_courses()
+        courses = courseRepo.get_all_active_courses()
 
         logger.info("Getting recommendations by category")
         CourseUtil.get_recommendation_by_category(userId, courses, recommendations)
@@ -77,7 +77,7 @@ class CourseUtil:
 
         return best_recommendations
 
-    def get_recommendation_by_category(userId, courses: List[CourseDTO], recommendations: Dict):
+    def get_recommendation_by_category(userId: int, courses: List[CourseDTO], recommendations: Dict):
         user_courses_categories = UserServiceUtil.getUserCategories(userId)
 
         for course in courses:
@@ -90,14 +90,17 @@ class CourseUtil:
 
         return recommendations
 
-    def get_recommendation_by_country(user, courses: List[CourseDTO], recommendations: Dict):
+    def get_recommendation_by_country(user: Dict, courses: List[CourseDTO], recommendations: Dict):
+
+        users = UserServiceUtil.getActiveUsers()
+
         for course in courses:
             for collaborator in course.collaborators:
                 if collaborator.isOwner:
                     logger.info("Collaborator with id: " + str(collaborator.userId) + " is owner")
 
-                    owner = UserServiceUtil.check_user_exists(collaborator.userId)
-                    if owner["country"] == user["country"]:
+                    owner = UserServiceUtil.getUserFromUsers(users, user["id"])
+                    if owner and (owner["country"] == user["country"]):
                         logger.info("User has same country as owner")
 
                         if course.courseName in recommendations.keys():
