@@ -32,7 +32,7 @@ def create_course_inscription(courseInscription: CourseInscriptionCreate, db: Se
         logger.warn("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = CourseInscriptionRepository(db)
-    CourseInscriptionUtil.check_courseInscription(repo, courseInscription)
+    CourseInscriptionUtil.check_courseInscription(db, courseInscription)
     return repo.create_courseInscription(courseInscription=courseInscription)
 
 
@@ -49,7 +49,7 @@ def read_students(course_id: int, skip: int = 0, limit: int = 100, db: Session =
 def cancel_course_inscription(courseInscription: CourseInscriptionCreate, db: Session = Depends(get_db)):
     logger.info("Cancelling inscription")
     repo = CourseInscriptionRepository(db)
-    db_inscription = CourseInscriptionUtil.check_id_exists(repo, courseInscription)
+    db_inscription = CourseInscriptionUtil.check_id_exists(db, courseInscription)
     if (db_inscription.status == 'Cancelled'):
         logger.warn("Inscription already cancelled")
         raise HTTPException(
@@ -66,7 +66,7 @@ def create_suscription_inscription(suscriptionInscription: SuscriptionInscriptio
         logger.warn("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = SuscriptionInscriptionRepository(db)
-    SuscriptionInscriptionUtil.check_suscriptionInscription(repo, suscriptionInscription)
+    SuscriptionInscriptionUtil.check_suscriptionInscription(db, suscriptionInscription)
     return repo.create_suscriptionInscription(suscriptionInscription)
 
 

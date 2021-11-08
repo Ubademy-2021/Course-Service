@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 
 from app.adapters.database.coursesModel import CourseDTO
 from app.adapters.http.util.categoryUtil import CategoryUtil
@@ -11,9 +11,11 @@ from app.core.logger import logger
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
+
 class CourseUtil:
 
-    def check_coursename(courseRepository: CourseRepository, coursename):
+    def check_coursename(session: Session, coursename):
+        courseRepository = CourseRepository(session)
         db_course = courseRepository.get_course_by_name(coursename)
         if db_course:
             logger.warn("Coursename " + coursename + " already in use")
@@ -21,27 +23,28 @@ class CourseUtil:
                 status_code=400, detail="Coursename " + coursename + " already in use"
             )
 
-    def check_id_exists(courseRepository: CourseRepository, course_id):
+    def check_id_exists(session: Session, course_id):
+        courseRepository = CourseRepository(session)
         db_course = courseRepository.get_course(course_id=course_id)
         if db_course is None:
             logger.warning("Course with id = " + str(course_id) + " not found")
             raise HTTPException(status_code=404, detail="Course not found")
         return db_course
 
-    def check_course_exists(repo: CourseRepository, id):
+    def check_course_exists(session: Session, id):
+        repo = CourseRepository(session)
         course = repo.get_course(id)
         if not course:
             logger.error("Course does not exist")
             raise HTTPException(status_code=400, detail="Course does not exist")
 
-    def check_course_category(repo: CourseCategoryRepository, courseCategory: CourseCategoryCreate):
+    def check_course_category(session: Session, courseCategory: CourseCategoryCreate):
 
-        courseRepo = CourseRepository(repo.session)
-        CourseUtil.check_course_exists(courseRepo, courseCategory.courseId)
+        CourseUtil.check_course_exists(session, courseCategory.courseId)
 
-        categoryRepo = CategoryRepository(repo.session)
-        CategoryUtil.check_category_exists(categoryRepo, courseCategory.categoryId)
+        CategoryUtil.check_category_exists(session, courseCategory.categoryId)
 
+        repo = CourseCategoryRepository(session)
         db_cc = repo.get_courseCategory(courseCategory.courseId, courseCategory.categoryId)
         if db_cc:
             logger.warn("Category already added")
@@ -64,7 +67,7 @@ class CourseUtil:
         CourseUtil.get_recommendation_by_country(user, courses, recommendations)
 
         recommendations = dict(sorted(recommendations.items(), key=lambda item: item[1], reverse=True))
-        
+
         best_recommendations = []
         for i in range(0, 5):
             if len(recommendations.items()) != 0:
@@ -74,7 +77,7 @@ class CourseUtil:
 
         return best_recommendations
 
-    def get_recommendation_by_category(userId, courses, recommendations):
+    def get_recommendation_by_category(userId, courses: List[CourseDTO], recommendations: Dict):
         user_courses_categories = UserServiceUtil.getUserCategories(userId)
 
         for course in courses:
@@ -87,7 +90,7 @@ class CourseUtil:
 
         return recommendations
 
-    def get_recommendation_by_country(user, courses: List[CourseDTO], recommendations):
+    def get_recommendation_by_country(user, courses: List[CourseDTO], recommendations: Dict):
         for course in courses:
             for collaborator in course.collaborators:
                 if collaborator.isOwner:

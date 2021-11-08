@@ -1,4 +1,3 @@
-from sqlalchemy.sql.functions import user
 from app.adapters.database.courseCategoriesModel import CourseCategoryDTO
 from app.adapters.database.database import SessionLocal
 from app.adapters.database.coursesModel import CourseDTO
@@ -15,8 +14,6 @@ from sqlalchemy.orm import Session
 from typing import List
 from app.core.logger import logger
 from app.domain.suscriptionCourses.suscriptionCourseRepository import SuscriptionCourseRepository
-from app.adapters.http.util.userServiceUtil import UserServiceUtil
-from app.domain.users.user import UserBase
 
 router = APIRouter(tags=["courses"])
 
@@ -39,7 +36,7 @@ def create_course(course: CourseCreate, db: Session = Depends(get_db)):
         logger.warn("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = CourseRepository(db)
-    CourseUtil.check_coursename(repo, course.courseName)
+    CourseUtil.check_coursename(db, course.courseName)
     db_course = repo.create_course(course=course)
     CollaboratorUtil.createOwner(db, db_course, course.ownerId)
     return db_course
@@ -71,8 +68,7 @@ def read_courses(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
 @router.get("/courses/{course_id}", response_model=Course)
 def read_course(course_id: int, db: Session = Depends(get_db)):
     logger.info("Getting course with id = " + str(course_id))
-    repo = CourseRepository(db)
-    db_course = CourseUtil.check_id_exists(repo, course_id)
+    db_course = CourseUtil.check_id_exists(db, course_id)
     return db_course
 
 
@@ -91,7 +87,7 @@ def read_courses_from_suscription(
 def cancel_course(course_id: int, db: Session = Depends(get_db)):
     logger.info("Creating course " + str(course_id))
     repo = CourseRepository(db)
-    db_course = CourseUtil.check_id_exists(repo, course_id)
+    db_course = CourseUtil.check_id_exists(db, course_id)
     if(db_course.status == 'Cancelled'):
         logger.warn("Course " + str(course_id) + " already cancelled")
         raise HTTPException(
@@ -109,7 +105,7 @@ def add_category_to_course(courseCategory: CourseCategoryCreate, db: Session = D
         logger.warn("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = CourseCategoryRepository(db)
-    CourseUtil.check_course_category(repo, courseCategory)
+    CourseUtil.check_course_category(db, courseCategory)
     return repo.create_courseCategory(courseCategory)
 
 

@@ -7,18 +7,6 @@ from app.core.logger import logger
 
 
 class UserServiceUtil:
-    def makeUserRequest(userId):
-        logger.info("Checking if user with id: " + str(userId) + " exists")
-
-        url = HEROKU_USER_SERVICE_BASE_URL + "/api/users?user_id=" + str(userId)
-        r = requests.get(url=url)
-
-        if r.status_code != 200:
-            logger.warn("User not found")
-            raise HTTPException(status_code=400, detail="User does not exist")
-
-        # Return user
-        return r.json()[0]
 
     def getUserCategories(userId):
         logger.info("Getting categories for user with id: " + str(userId))
@@ -40,4 +28,14 @@ class UserServiceUtil:
         return categories_id
 
     def check_user_exists(id):
-        return UserServiceUtil.makeUserRequest(id)
+        logger.info("Checking if user with id: " + str(id) + " exists")
+
+        url = HEROKU_USER_SERVICE_BASE_URL + "/api/users?user_id=" + str(id)
+        r = requests.get(url=url)
+
+        if r.status_code != 200:
+            logger.warn("User not found")
+            raise HTTPException(status_code=400, detail="User does not exist")
+
+        # Return user
+        return r.json()[0]

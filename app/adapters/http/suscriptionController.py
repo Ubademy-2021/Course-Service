@@ -31,7 +31,7 @@ def create_suscription(suscription: SuscriptionCreate, db: Session = Depends(get
         logger.warn("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = SuscriptionRepository(db)
-    SuscriptionUtil.check_description(repo, suscription.description)
+    SuscriptionUtil.check_description(db, suscription.description)
     return repo.create_suscription(suscription=suscription)
 
 
@@ -47,8 +47,7 @@ def read_suscriptions(skip: int = 0, limit: int = 100, db: Session = Depends(get
 @router.get("/suscriptions/{suscription_id}", response_model=Suscription)
 def read_suscription(suscription_id: int, db: Session = Depends(get_db)):
     logger.info("Getting suscription with id = " + str(suscription_id))
-    repo = SuscriptionRepository(db)
-    db_suscription = SuscriptionUtil.check_id_exists(repo, suscription_id)
+    db_suscription = SuscriptionUtil.check_id_exists(db, suscription_id)
     return db_suscription
 
 
