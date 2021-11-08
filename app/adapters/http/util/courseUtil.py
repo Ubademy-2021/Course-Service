@@ -1,11 +1,15 @@
+from typing import List
+
+from app.adapters.database.coursesModel import CourseDTO
 from app.adapters.http.util.categoryUtil import CategoryUtil
+from app.adapters.http.util.userServiceUtil import UserServiceUtil
 from app.domain.categories.categoryRepository import CategoryRepository
 from app.domain.courseCategories.courseCategory import CourseCategoryCreate
 from app.domain.courseCategories.courseCategoryRepository import CourseCategoryRepository
 from app.domain.courses.courseRepository import CourseRepository
 from app.core.logger import logger
 from fastapi import HTTPException
-
+from sqlalchemy.orm import Session
 
 class CourseUtil:
 
@@ -44,3 +48,58 @@ class CourseUtil:
             raise HTTPException(
                 status_code=400, detail="Category already added"
             )
+
+    def get_course_recomendation(session: Session, userId: int):
+        user = UserServiceUtil.check_user_exists(userId)
+
+        recommendations = {}
+
+        courseRepo = CourseRepository(session)
+        courses = courseRepo.get_all_courses()
+
+        logger.info("Getting recommendations by category")
+        CourseUtil.get_recommendation_by_category(userId, courses, recommendations)
+
+        logger.info("Getting recommendations by country")
+        CourseUtil.get_recommendation_by_country(user, courses, recommendations)
+
+        recommendations = dict(sorted(recommendations.items(), key=lambda item: item[1], reverse=True))
+        
+        best_recommendations = []
+        for i in range(0, 5):
+            if len(recommendations.items()) != 0:
+                max_key = max(recommendations, key=recommendations.get)
+                best_recommendations.append(max_key)
+                recommendations.pop(max_key)
+
+        return best_recommendations
+
+    def get_recommendation_by_category(userId, courses, recommendations):
+        user_courses_categories = UserServiceUtil.getUserCategories(userId)
+
+        for course in courses:
+            for category in course.categories:
+                if category.categoryId in user_courses_categories:
+                    if course.courseName in recommendations.keys():
+                        recommendations[course] += 1
+                    else:
+                        recommendations[course] = 1
+
+        return recommendations
+
+    def get_recommendation_by_country(user, courses: List[CourseDTO], recommendations):
+        for course in courses:
+            for collaborator in course.collaborators:
+                if collaborator.isOwner:
+                    logger.info("Collaborator with id: " + str(collaborator.userId) + " is owner")
+
+                    owner = UserServiceUtil.check_user_exists(collaborator.userId)
+                    if owner["country"] == user["country"]:
+                        logger.info("User has same country as owner")
+
+                        if course.courseName in recommendations.keys():
+                            recommendations[course] += 1
+                        else:
+                            recommendations[course] = 1
+
+        return recommendations

@@ -1,3 +1,4 @@
+from sqlalchemy.sql.functions import user
 from app.adapters.database.courseCategoriesModel import CourseCategoryDTO
 from app.adapters.database.database import SessionLocal
 from app.adapters.database.coursesModel import CourseDTO
@@ -14,6 +15,8 @@ from sqlalchemy.orm import Session
 from typing import List
 from app.core.logger import logger
 from app.domain.suscriptionCourses.suscriptionCourseRepository import SuscriptionCourseRepository
+from app.adapters.http.util.userServiceUtil import UserServiceUtil
+from app.domain.users.user import UserBase
 
 router = APIRouter(tags=["courses"])
 
@@ -117,3 +120,11 @@ def read_courses_by_category(category_id: int, skip: int = 0, limit: int = 100, 
     courses = repo.get_courses_by_category(category_id, skip=skip, limit=limit)
     logger.debug("Getting " + str(courses.count(CourseCategoryDTO)) + " courses")
     return list(map(CourseCategoryDTO.getCourse, courses))
+
+
+@router.get("/courses/recommendation/{user_id}", response_model=List[Course])
+def get_course_recomendation(user_id: int, db: Session = Depends(get_db)):
+    logger.info("Getting courses recommendation for user with id " + str(user_id))
+    courses_to_recommend = CourseUtil.get_course_recomendation(db, user_id)
+
+    return courses_to_recommend
