@@ -1,6 +1,6 @@
-from sqlalchemy.orm import Session
-from app.domain.courseCategories.courseCategory import CourseCategoryCreate, CourseCategory
 from app.adapters.database.courseCategoriesModel import CourseCategoryDTO
+from app.domain.courseCategories.courseCategory import CourseCategoryCreate
+from sqlalchemy.orm import Session
 
 
 class CourseCategoryRepository:

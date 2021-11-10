@@ -1,9 +1,7 @@
-from sqlalchemy import Column, Integer, String, Float
-from sqlalchemy.orm import relationship
 from app.adapters.database.database import Base
 from app.domain.suscriptions.suscription import SuscriptionCreate
-
-# catedra hacen Base=declarative_base()
+from sqlalchemy import Column, Float, Integer, String
+from sqlalchemy.orm import relationship
 
 
 class SuscriptionDTO(Base):

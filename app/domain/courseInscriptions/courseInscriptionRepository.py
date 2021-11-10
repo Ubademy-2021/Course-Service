@@ -1,6 +1,7 @@
-from sqlalchemy.orm import Session
-from app.domain.courseInscriptions.courseInscription import CourseInscriptionCreate, CourseInscription
 from app.adapters.database.courseInscriptionsModel import CourseInscriptionDTO
+from app.domain.courseInscriptions.courseInscription import \
+    CourseInscriptionCreate
+from sqlalchemy.orm import Session
 
 
 class CourseInscriptionRepository:

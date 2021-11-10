@@ -1,6 +1,6 @@
-from sqlalchemy.orm import Session
-from app.domain.suscriptions.suscription import SuscriptionCreate, Suscription
 from app.adapters.database.suscriptionsModel import SuscriptionDTO
+from app.domain.suscriptions.suscription import Suscription, SuscriptionCreate
+from sqlalchemy.orm import Session
 
 
 class SuscriptionRepository:

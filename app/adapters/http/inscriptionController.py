@@ -1,15 +1,19 @@
-from app.adapters.database.database import SessionLocal
 from app.adapters.database.courseInscriptionsModel import CourseInscriptionDTO
-from app.adapters.http.util.inscriptionsUtil import CourseInscriptionUtil, SuscriptionInscriptionUtil
+from app.adapters.database.database import SessionLocal
+from app.adapters.http.util.inscriptionsUtil import (
+    CourseInscriptionUtil, SuscriptionInscriptionUtil)
 from app.adapters.http.util.userServiceUtil import UserServiceUtil
-from app.domain.courseInscriptions.courseInscription import CourseInscriptionCreate, CourseInscription
-from app.domain.courseInscriptions.courseInscriptionRepository import CourseInscriptionRepository
-from fastapi import Depends, APIRouter, HTTPException
-from sqlalchemy.orm import Session
-from typing import List
 from app.core.logger import logger
-from app.domain.suscriptionInscriptions.suscriptionInscription import SuscriptionInscription, SuscriptionInscriptionCreate
-from app.domain.suscriptionInscriptions.suscriptionInscriptionRepository import SuscriptionInscriptionRepository
+from app.domain.courseInscriptions.courseInscription import (
+    CourseInscription, CourseInscriptionCreate)
+from app.domain.courseInscriptions.courseInscriptionRepository import \
+    CourseInscriptionRepository
+from app.domain.suscriptionInscriptions.suscriptionInscription import (
+    SuscriptionInscription, SuscriptionInscriptionCreate)
+from app.domain.suscriptionInscriptions.suscriptionInscriptionRepository import \
+    SuscriptionInscriptionRepository
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 
 router = APIRouter(tags=["inscriptions"])
 

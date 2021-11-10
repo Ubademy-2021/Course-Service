@@ -1,13 +1,16 @@
-from app.adapters.database.database import SessionLocal
+from typing import List
+
 from app.adapters.database.collaboratorsModel import CollaboratorDTO
+from app.adapters.database.database import SessionLocal
 from app.adapters.http.util.collaboratorUtil import CollaboratorUtil
 from app.adapters.http.util.userServiceUtil import UserServiceUtil
-from app.domain.collaborators.collaborator import CollaboratorCreate, Collaborator
-from app.domain.collaborators.collaboratorRepository import CollaboratorRepository
-from fastapi import Depends, APIRouter, HTTPException
-from sqlalchemy.orm import Session
-from typing import List
 from app.core.logger import logger
+from app.domain.collaborators.collaborator import (Collaborator,
+                                                   CollaboratorCreate)
+from app.domain.collaborators.collaboratorRepository import \
+    CollaboratorRepository
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 
 router = APIRouter(tags=["collaborators"])
 

@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
 from app.adapters.database.database import Base
 from app.domain.categories.category import CategoryBase
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 
 
 class CategoryDTO(Base):

@@ -1,9 +1,8 @@
+from app.core.config import DATABASE_URL, POSTGRES_SERVER
+from app.core.logger import logger
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from app.core.config import DATABASE_URL, POSTGRES_SERVER
-from app.core.logger import logger
-
 
 SQLALCHEMY_DATABASE_URL = DATABASE_URL
 

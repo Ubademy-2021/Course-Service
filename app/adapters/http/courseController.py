@@ -1,19 +1,22 @@
+from typing import List
+
 from app.adapters.database.courseCategoriesModel import CourseCategoryDTO
 from app.adapters.database.database import SessionLocal
-from app.adapters.database.coursesModel import CourseDTO
 from app.adapters.database.suscriptionCoursesModel import SuscriptionCourseDTO
 from app.adapters.http.util.collaboratorUtil import CollaboratorUtil
 from app.adapters.http.util.courseUtil import CourseUtil
-from app.domain.courseCategories.courseCategory import CourseCategory, CourseCategoryCreate
-from app.domain.courseCategories.courseCategoryRepository import CourseCategoryRepository
-from app.domain.courses.course import CourseBase, CourseCreate, Course
+from app.core.logger import logger
+from app.domain.courseCategories.courseCategory import (CourseCategory,
+                                                        CourseCategoryCreate)
+from app.domain.courseCategories.courseCategoryRepository import \
+    CourseCategoryRepository
+from app.domain.courses.course import Course, CourseBase, CourseCreate
 from app.domain.courses.courseRepository import CourseRepository
 from app.domain.exceptions import CourseNotFoundError
-from fastapi import Depends, APIRouter, HTTPException
+from app.domain.suscriptionCourses.suscriptionCourseRepository import \
+    SuscriptionCourseRepository
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
-from app.core.logger import logger
-from app.domain.suscriptionCourses.suscriptionCourseRepository import SuscriptionCourseRepository
 
 router = APIRouter(tags=["courses"])
 

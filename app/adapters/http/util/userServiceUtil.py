@@ -1,9 +1,9 @@
 from typing import List
 
-from fastapi.exceptions import HTTPException
-from app.core.config import HEROKU_USER_SERVICE_BASE_URL
 import requests
+from app.core.config import HEROKU_USER_SERVICE_BASE_URL
 from app.core.logger import logger
+from fastapi.exceptions import HTTPException
 
 
 class UserServiceUtil:

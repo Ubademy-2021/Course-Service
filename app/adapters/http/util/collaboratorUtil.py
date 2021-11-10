@@ -1,12 +1,13 @@
-from sqlalchemy.orm.session import Session
 from app.adapters.database.collaboratorsModel import CollaboratorDTO
 from app.adapters.database.coursesModel import CourseDTO
 from app.adapters.http.util.courseUtil import CourseUtil
-from app.domain.collaborators.collaborator import CollaboratorCreate
-from app.domain.collaborators.collaboratorRepository import CollaboratorRepository
 from app.adapters.http.util.userServiceUtil import UserServiceUtil
 from app.core.logger import logger
+from app.domain.collaborators.collaborator import CollaboratorCreate
+from app.domain.collaborators.collaboratorRepository import \
+    CollaboratorRepository
 from fastapi import HTTPException
+from sqlalchemy.orm.session import Session
 
 
 class CollaboratorUtil:

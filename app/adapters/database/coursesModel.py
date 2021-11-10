@@ -1,8 +1,9 @@
-from sqlalchemy import Column, Integer, String, DateTime, Time, Float
-from sqlalchemy.orm import relationship
+import datetime
+
 from app.adapters.database.database import Base
 from app.domain.courses.course import CourseCreate
-import datetime
+from sqlalchemy import Column, DateTime, Float, Integer, String, Time
+from sqlalchemy.orm import relationship
 
 # catedra hacen Base=declarative_base()
 

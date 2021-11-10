@@ -1,6 +1,7 @@
-from sqlalchemy.orm import Session
-from app.domain.collaborators.collaborator import CollaboratorCreate, Collaborator
 from app.adapters.database.collaboratorsModel import CollaboratorDTO
+from app.domain.collaborators.collaborator import (Collaborator,
+                                                   CollaboratorCreate)
+from sqlalchemy.orm import Session
 
 
 class CollaboratorRepository:
