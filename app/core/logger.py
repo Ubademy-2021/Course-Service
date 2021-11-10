@@ -6,7 +6,7 @@ import logging
 class LogConfig(BaseModel):
     """Logging configuration to be set for the server"""
 
-    LOGGER_NAME: str = "User-Service-Log"
+    LOGGER_NAME: str = "Course-Service-Log"
     LOG_FORMAT: str = "%(levelprefix)s | %(asctime)s | %(message)s"
     LOG_LEVEL: str = "DEBUG"
 

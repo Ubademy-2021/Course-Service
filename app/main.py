@@ -16,7 +16,7 @@ logger.info("Starting Course-Service")
 
 @app.get('/ping', status_code=status.HTTP_200_OK)
 async def root():
-    logger.warn("This is an testing endpoint, not intended for productive environment")
+    logger.warning("This is an testing endpoint, not intended for productive environment")
     return "pong"
 
 app.include_router(courseController.router, prefix="/api")

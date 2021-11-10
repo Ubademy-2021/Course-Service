@@ -17,6 +17,9 @@ class CourseRepository:
     def get_courses(self, skip: int = 0, limit: int = 100):
         return self.session.query(CourseDTO).offset(skip).limit(limit).all()
 
+    def get_all_active_courses(self):
+        return self.session.query(CourseDTO).filter(CourseDTO.status == "Active").all()
+
     def create_course(self, course: CourseCreate):
         session_course = CourseDTO()
         session_course.initWithCourseCreate(course)

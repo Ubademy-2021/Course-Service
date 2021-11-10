@@ -1,7 +1,6 @@
 from app.adapters.database.database import SessionLocal
 from app.adapters.database.collaboratorsModel import CollaboratorDTO
 from app.adapters.http.util.collaboratorUtil import CollaboratorUtil
-from app.adapters.http.util.userServiceUtil import UserServiceUtil
 from app.domain.collaborators.collaborator import CollaboratorCreate, Collaborator
 from app.domain.collaborators.collaboratorRepository import CollaboratorRepository
 from fastapi import Depends, APIRouter, HTTPException
@@ -28,10 +27,10 @@ def create_collaborator(collaborator: CollaboratorCreate, db: Session = Depends(
     logger.info("Creating collaborator")
 
     if not collaborator.isComplete():
-        logger.warn("Required fields are not complete")
+        logger.warning("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = CollaboratorRepository(db)
-    CollaboratorUtil.check_collaborator(repo, collaborator)
+    CollaboratorUtil.check_collaborator(db, collaborator)
 
     return repo.create_collaborator(collaborator=collaborator)
 
