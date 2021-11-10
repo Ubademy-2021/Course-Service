@@ -2,6 +2,7 @@ from app.adapters.database.courseCategoriesModel import CourseCategoryDTO
 from app.adapters.database.database import SessionLocal
 from app.adapters.database.coursesModel import CourseDTO
 from app.adapters.database.suscriptionCoursesModel import SuscriptionCourseDTO
+from app.adapters.http.util.categoryUtil import CategoryUtil
 from app.adapters.http.util.collaboratorUtil import CollaboratorUtil
 from app.adapters.http.util.courseUtil import CourseUtil
 from app.domain.courseCategories.courseCategory import CourseCategory, CourseCategoryCreate
@@ -11,7 +12,7 @@ from app.domain.courses.courseRepository import CourseRepository
 from app.domain.exceptions import CourseNotFoundError
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from app.core.logger import logger
 from app.domain.suscriptionCourses.suscriptionCourseRepository import SuscriptionCourseRepository
 
@@ -59,20 +60,35 @@ def update_course(course_id: int, course_updated: CourseBase, db: Session = Depe
 
 
 @router.get("/courses", response_model=List[Course])
-def read_courses(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    logger.info("Getting courses list")
+def read_courses(
+    skip: int = 0, 
+    limit: int = 100,
+    course_id: Optional[int] = None,
+    active: Optional[bool] = None,
+    category_id: Optional[int] = None,
+    db: Session = Depends(get_db)
+):
     repo = CourseRepository(db)
-    courses = repo.get_courses(skip=skip, limit=limit)
-    logger.debug("Getting " + str(len(courses)) + " courses")
-    return courses
 
+    if course_id:
+        logger.info("Getting course with id = " + str(course_id))
+        CourseUtil.check_course_exists(db, course_id)
+        courses = []
+        courses.append(repo.get_course(course_id))
+        return courses
+    elif active:
+        logger.info("Getting active courses")
+        return repo.get_active_courses(skip=skip, limit=limit)
+    elif category_id:
+        logger.info("Getting course with category ig = " + str(category_id))
+        repo = CourseCategoryRepository(db)
+        courses = repo.get_courses_by_category(category_id, skip=skip, limit=limit)
+        logger.debug("Got " + str(len(courses)) + " courses for category id: " + str(category_id))
+        return list(map(CourseCategoryDTO.getCourse, courses))
 
-@router.get("/courses/{course_id}", response_model=Course)
-def read_course(course_id: int, db: Session = Depends(get_db)):
-    logger.info("Getting course with id = " + str(course_id))
-    db_course = CourseUtil.check_id_exists(db, course_id)
-    return db_course
-
+    logger.info("Getting all courses")
+    return (repo.get_courses(skip=skip, limit=limit))
+    
 
 @router.get("/courses/suscription/{suscriptionId}", response_model=List[Course])
 def read_courses_from_suscription(
@@ -118,15 +134,6 @@ def add_category_to_course(courseCategory: CourseCategoryCreate, db: Session = D
     repo = CourseCategoryRepository(db)
     CourseUtil.check_course_category(db, courseCategory)
     return repo.create_courseCategory(courseCategory)
-
-
-@router.get("/courses/category/{category_id}", response_model=List[Course])
-def read_courses_by_category(category_id: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    logger.info("Getting courses by category")
-    repo = CourseCategoryRepository(db)
-    courses = repo.get_courses_by_category(category_id, skip=skip, limit=limit)
-    logger.debug("Getting " + str(len(courses)) + " courses")
-    return list(map(CourseCategoryDTO.getCourse, courses))
 
 
 @router.get("/courses/recommendation/{user_id}", response_model=List[Course])
