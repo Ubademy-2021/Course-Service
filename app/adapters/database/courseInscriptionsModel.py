@@ -19,3 +19,6 @@ class CourseInscriptionDTO(Base):
         self.courseId = courseInscription.courseId
         self.userId = courseInscription.userId
         self.status = 'Active'
+
+    def getUserId(self):
+        return self.userId

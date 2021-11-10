@@ -58,3 +58,12 @@ class UserServiceUtil:
             if user["id"] == userId:
                 print(user)
                 return user
+
+    def getUsersWithIds(ids: List):
+        users = UserServiceUtil.getActiveUsers()
+        returnUsers = []
+        for id in ids:
+            for user in users:
+                if user["id"] == id:
+                    returnUsers.append(user)
+        return returnUsers

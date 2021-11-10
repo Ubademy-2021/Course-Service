@@ -63,7 +63,7 @@ def read_courses(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
     logger.info("Getting courses list")
     repo = CourseRepository(db)
     courses = repo.get_courses(skip=skip, limit=limit)
-    logger.debug("Getting " + str(courses.count(CourseDTO)) + " courses")
+    logger.debug("Getting " + str(len(courses)) + " courses")
     return courses
 
 
@@ -81,8 +81,17 @@ def read_courses_from_suscription(
     logger.info("Getting course list of suscription " + str(suscriptionId))
     crud = SuscriptionCourseRepository(db)
     courses = crud.get_courses_by_suscription(suscriptionId, skip=skip, limit=limit)
-    logger.debug("Getting " + str(courses.count(SuscriptionCourseDTO)) + " courses")
+    logger.debug("Getting " + str(len(courses)) + " courses")
     return list(map(SuscriptionCourseDTO.getCourse, courses))
+
+
+@router.get("/courses/active/", response_model=List[Course])
+def read_active_courses(db: Session = Depends(get_db)):
+    logger.info("Getting active course list")
+    crud = CourseRepository(db)
+    courses = crud.get_all_active_courses()
+    logger.debug("Getting " + str(len(courses)) + " courses")
+    return courses
 
 
 @router.put("/courses/cancel/{course_id}", response_model=Course)
@@ -116,7 +125,7 @@ def read_courses_by_category(category_id: int, skip: int = 0, limit: int = 100, 
     logger.info("Getting courses by category")
     repo = CourseCategoryRepository(db)
     courses = repo.get_courses_by_category(category_id, skip=skip, limit=limit)
-    logger.debug("Getting " + str(courses.count(CourseCategoryDTO)) + " courses")
+    logger.debug("Getting " + str(len(courses)) + " courses")
     return list(map(CourseCategoryDTO.getCourse, courses))
 
 

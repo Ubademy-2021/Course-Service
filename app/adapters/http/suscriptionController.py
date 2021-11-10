@@ -40,7 +40,7 @@ def read_suscriptions(skip: int = 0, limit: int = 100, db: Session = Depends(get
     logger.info("Getting suscriptions list")
     repo = SuscriptionRepository(db)
     suscriptions = repo.get_suscriptions(skip=skip, limit=limit)
-    logger.debug("Getting " + str(suscriptions.count(SuscriptionDTO)) + " suscriptions")
+    logger.debug("Getting " + str(len(suscriptions)) + " suscriptions")
     return suscriptions
 
 

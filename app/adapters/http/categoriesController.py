@@ -28,7 +28,7 @@ def read_categories(skip: int = 0, limit: int = 100, db: Session = Depends(get_d
     logger.info("Getting categories list")
     repo = CategoryRepository(db)
     categories = repo.get_categories(skip=skip, limit=limit)
-    logger.debug("Getting " + str(categories.count(CategoryDTO)) + " categories")
+    logger.debug("Getting " + str(len(categories)) + " categories")
     return categories
 
 
@@ -37,6 +37,15 @@ def read_category(categoryId, skip: int = 0, limit: int = 100, db: Session = Dep
     logger.info("Getting category " + str(categoryId))
     category = CategoryUtil.check_category_exists(db, categoryId)
     return category
+
+
+@router.get("/categories/all/", response_model=List[Category])
+def read_all_categories(db: Session = Depends(get_db)):
+    logger.info("Getting all categories")
+    repo = CategoryRepository(db)
+    categories = repo.get_all_categories()
+    logger.debug("Getting " + str(len(categories)) + " categories")
+    return categories
 
 
 @router.post("/categories", response_model=Category)

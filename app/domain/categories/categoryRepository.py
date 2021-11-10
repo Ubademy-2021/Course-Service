@@ -20,6 +20,9 @@ class CategoryRepository:
     def get_categories(self, skip: int = 0, limit: int = 100):
         return self.session.query(CategoryDTO).offset(skip).limit(limit).all()
 
+    def get_all_categories(self):
+        return self.session.query(CategoryDTO).all()
+
     def create_category(self, category: CategoryBase):
         session_category = CategoryDTO()
         session_category.initWithCategoryBase(category)
