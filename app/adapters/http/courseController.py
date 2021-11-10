@@ -85,7 +85,7 @@ def read_courses_from_suscription(
     return list(map(SuscriptionCourseDTO.getCourse, courses))
 
 
-@router.get("/courses/active", response_model=List[Course])
+@router.get("/courses/active/", response_model=List[Course])
 def read_active_courses(db: Session = Depends(get_db)):
     logger.info("Getting active course list")
     crud = CourseRepository(db)
