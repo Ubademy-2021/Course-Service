@@ -10,6 +10,7 @@ from app.domain.courses.courseRepository import CourseRepository
 from app.core.logger import logger
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
+from app.core.config import *
 
 
 class CourseUtil:
@@ -84,9 +85,9 @@ class CourseUtil:
             for category in course.categories:
                 if category.categoryId in user_courses_categories:
                     if course.courseName in recommendations.keys():
-                        recommendations[course] += 1
+                        recommendations[course] += SCORE_SAME_CATEGORY
                     else:
-                        recommendations[course] = 1
+                        recommendations[course] = SCORE_SAME_CATEGORY
 
         return recommendations
 
@@ -104,8 +105,8 @@ class CourseUtil:
                         logger.info("User has same country as owner")
 
                         if course.courseName in recommendations.keys():
-                            recommendations[course] += 1
+                            recommendations[course] += SCORE_SAME_COUNTRY
                         else:
-                            recommendations[course] = 1
+                            recommendations[course] = SCORE_SAME_COUNTRY
 
         return recommendations
