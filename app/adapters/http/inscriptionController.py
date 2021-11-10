@@ -36,13 +36,13 @@ def create_course_inscription(courseInscription: CourseInscriptionCreate, db: Se
     return repo.create_courseInscription(courseInscription=courseInscription)
 
 
-@router.get("/courses/students/{course_id}", response_model=List[CourseInscription])
+@router.get("/courses/students/{course_id}")
 def read_students(course_id: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     logger.info("Getting students list from course " + str(course_id))
     repo = CourseInscriptionRepository(db)
     courseInscriptions = repo.get_students_by_course(course_id, skip=skip, limit=limit)
-    logger.debug("Getting " + str(courseInscriptions.count(CourseInscriptionDTO)) + " courseInscriptions")
-    return courseInscriptions
+    logger.debug("Getting " + str(len(courseInscriptions)) + " courseInscriptions")
+    return UserServiceUtil.getUsersWithIds(list(map(CourseInscriptionDTO.getUserId, courseInscriptions)))
 
 
 @router.put("/courses/inscription/cancel", response_model=CourseInscription)

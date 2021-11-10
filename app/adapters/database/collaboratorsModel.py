@@ -19,3 +19,6 @@ class CollaboratorDTO(Base):
         self.courseId = collaborator.courseId
         self.userId = collaborator.userId
         self.isOwner = False
+
+    def getUserId(self):
+        return self.userId

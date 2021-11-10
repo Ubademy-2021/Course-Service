@@ -1,6 +1,7 @@
 from app.adapters.database.database import SessionLocal
 from app.adapters.database.collaboratorsModel import CollaboratorDTO
 from app.adapters.http.util.collaboratorUtil import CollaboratorUtil
+from app.adapters.http.util.userServiceUtil import UserServiceUtil
 from app.domain.collaborators.collaborator import CollaboratorCreate, Collaborator
 from app.domain.collaborators.collaboratorRepository import CollaboratorRepository
 from fastapi import Depends, APIRouter, HTTPException
@@ -35,10 +36,10 @@ def create_collaborator(collaborator: CollaboratorCreate, db: Session = Depends(
     return repo.create_collaborator(collaborator=collaborator)
 
 
-@router.get("/collaborators/{course_id}", response_model=List[Collaborator])
+@router.get("/collaborators/{course_id}")
 def read_collaborators(course_id, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     logger.info("Getting collaborators list from course " + str(course_id))
     repo = CollaboratorRepository(db)
     collaborators = repo.get_collaborators_by_course(course_id, skip=skip, limit=limit)
-    logger.debug("Getting " + str(collaborators.count(CollaboratorDTO)) + " collaborators")
-    return collaborators
+    logger.debug("Getting " + str(len(collaborators)) + " collaborators")
+    return UserServiceUtil.getUsersWithIds(list(map(CollaboratorDTO.getUserId, collaborators)))
