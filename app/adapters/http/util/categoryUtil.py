@@ -21,3 +21,4 @@ class CategoryUtil:
         if not category:
             logger.warning("Category does not exist")
             raise HTTPException(status_code=400, detail="Category does not exist")
+        return category
