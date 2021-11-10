@@ -10,7 +10,7 @@ from app.domain.courses.courseRepository import CourseRepository
 from app.core.logger import logger
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from app.core.config import *
+from app.core.config import SCORE_SAME_COUNTRY, SCORE_SAME_CATEGORY
 
 
 class CourseUtil:
