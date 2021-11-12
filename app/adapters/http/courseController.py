@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from app.adapters.database.courseCategoriesModel import CourseCategoryDTO
+from app.adapters.database.courseInscriptionsModel import CourseInscriptionDTO
 from app.adapters.database.database import SessionLocal
 from app.adapters.database.suscriptionCoursesModel import SuscriptionCourseDTO
 from app.adapters.http.util.collaboratorUtil import CollaboratorUtil
@@ -10,6 +11,8 @@ from app.domain.courseCategories.courseCategory import (CourseCategory,
                                                         CourseCategoryCreate)
 from app.domain.courseCategories.courseCategoryRepository import \
     CourseCategoryRepository
+from app.domain.courseInscriptions.courseInscriptionRepository import \
+    CourseInscriptionRepository
 from app.domain.courses.course import Course, CourseBase, CourseCreate
 from app.domain.courses.courseRepository import CourseRepository
 from app.domain.exceptions import CourseNotFoundError
@@ -69,6 +72,7 @@ def read_courses(
     active: Optional[bool] = None,
     category_id: Optional[int] = None,
     suscription_id: Optional[int] = None,
+    user_id: Optional[int] = None,
     db: Session = Depends(get_db)
 ):
     repo = CourseRepository(db)
@@ -92,29 +96,26 @@ def read_courses(
 
         courses = list(map(CourseCategoryDTO.getCourse, courses))
     elif suscription_id:
-        logger.info("Getting course with suscription id = " + str(category_id))
+        logger.info("Getting course with suscription id = " + str(suscription_id))
 
         repo = SuscriptionCourseRepository(db)
         courses = repo.get_courses_by_suscription(suscription_id, skip=skip, limit=limit)
-        logger.debug("Got " + str(len(courses)) + " courses for suscription id: " + str(category_id))
+        logger.debug("Got " + str(len(courses)) + " courses for suscription id: " + str(suscription_id))
 
         courses = list(map(CourseCategoryDTO.getCourse, courses))
+    elif user_id:
+        logger.info("Getting courses in which user " + str(user_id) + " is a student")
+
+        repo = CourseInscriptionRepository(db)
+        courses = repo.get_courses_by_student(user_id, skip=skip, limit=limit)
+        logger.debug("Got " + str(len(courses)) + " courses for user id: " + str(user_id))
+
+        courses = list(map(CourseInscriptionDTO.getCourse, courses))
     else:
         logger.info("Getting all courses")
         courses = repo.get_courses(skip=skip, limit=limit)
 
     return CourseUtil.getCoursesForResponse(courses)
-
-
-@router.get("/courses/suscription/{suscriptionId}", response_model=List[Course])
-def read_courses_from_suscription(
-    suscriptionId: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
-):
-    logger.info("Getting course list of suscription " + str(suscriptionId))
-    crud = SuscriptionCourseRepository(db)
-    courses = crud.get_courses_by_suscription(suscriptionId, skip=skip, limit=limit)
-    logger.debug("Getting " + str(len(courses)) + " courses")
-    return list(map(SuscriptionCourseDTO.getCourse, courses))
 
 
 @router.get("/courses/active", response_model=List[Course])

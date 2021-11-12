@@ -23,3 +23,6 @@ class CourseInscriptionDTO(Base):
 
     def getUserId(self):
         return self.userId
+
+    def getCourse(self):
+        return self.course
