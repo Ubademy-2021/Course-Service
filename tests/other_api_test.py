@@ -37,8 +37,3 @@ def test_get_collaborators_course_1():
 def test_get_categories():
     response = client.get("/api/categories")
     assert response.status_code == 200
-
-
-def test_get_categories_all():
-    response = client.get("/api/categories/all/")
-    assert response.status_code == 200

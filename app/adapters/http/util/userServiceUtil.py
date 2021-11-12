@@ -56,7 +56,6 @@ class UserServiceUtil:
     def getUserFromUsers(users: List, userId):
         for user in users:
             if user["id"] == userId:
-                print(user)
                 return user
 
     def getUsersWithIds(ids: List):
