@@ -38,7 +38,7 @@ def read_category(categoryId, skip: int = 0, limit: int = 100, db: Session = Dep
     return category
 
 
-@router.get("/categories/all", response_model=List[Category])
+@router.get("/categories/all/", response_model=List[Category])
 def read_all_categories(db: Session = Depends(get_db)):
     logger.info("Getting all categories")
     repo = CategoryRepository(db)
