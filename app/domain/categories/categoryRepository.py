@@ -1,6 +1,6 @@
-from sqlalchemy.orm import Session
-from app.domain.categories.category import CategoryBase
 from app.adapters.database.categoriesModel import CategoryDTO
+from app.domain.categories.category import CategoryBase
+from sqlalchemy.orm import Session
 
 
 class CategoryRepository:

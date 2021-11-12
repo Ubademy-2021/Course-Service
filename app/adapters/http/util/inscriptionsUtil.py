@@ -1,14 +1,18 @@
-from app.adapters.database.suscriptionInscriptionsModel import SuscriptionInscriptionDTO
+from app.adapters.database.suscriptionInscriptionsModel import \
+    SuscriptionInscriptionDTO
 from app.adapters.http.util.courseUtil import CourseUtil
 from app.adapters.http.util.suscriptionUtil import SuscriptionUtil
-
-from app.domain.courseInscriptions.courseInscription import CourseInscriptionCreate
-from app.domain.courseInscriptions.courseInscriptionRepository import CourseInscriptionRepository
-from app.core.logger import logger
-from fastapi import HTTPException
-from app.domain.suscriptionInscriptions.suscriptionInscription import SuscriptionInscriptionCreate
-from app.domain.suscriptionInscriptions.suscriptionInscriptionRepository import SuscriptionInscriptionRepository
 from app.adapters.http.util.userServiceUtil import UserServiceUtil
+from app.core.logger import logger
+from app.domain.courseInscriptions.courseInscription import \
+    CourseInscriptionCreate
+from app.domain.courseInscriptions.courseInscriptionRepository import \
+    CourseInscriptionRepository
+from app.domain.suscriptionInscriptions.suscriptionInscription import \
+    SuscriptionInscriptionCreate
+from app.domain.suscriptionInscriptions.suscriptionInscriptionRepository import \
+    SuscriptionInscriptionRepository
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 

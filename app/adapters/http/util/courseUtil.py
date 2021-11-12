@@ -1,18 +1,18 @@
 from typing import Dict, List
 
+from app.adapters.database.courseCategoriesModel import CourseCategoryDTO
 from app.adapters.database.coursesModel import CourseDTO
 from app.adapters.database.suscriptionCoursesModel import SuscriptionCourseDTO
 from app.adapters.http.util.categoryUtil import CategoryUtil
 from app.adapters.http.util.userServiceUtil import UserServiceUtil
-from app.domain.categories.categoryRepository import CategoryRepository
-from app.adapters.database.courseCategoriesModel import CourseCategoryDTO
-from app.domain.courseCategories.courseCategory import CourseCategoryCreate
-from app.domain.courseCategories.courseCategoryRepository import CourseCategoryRepository
-from app.domain.courses.courseRepository import CourseRepository
+from app.core.config import SCORE_SAME_CATEGORY, SCORE_SAME_COUNTRY
 from app.core.logger import logger
+from app.domain.courseCategories.courseCategory import CourseCategoryCreate
+from app.domain.courseCategories.courseCategoryRepository import \
+    CourseCategoryRepository
+from app.domain.courses.courseRepository import CourseRepository
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from app.core.config import SCORE_SAME_COUNTRY, SCORE_SAME_CATEGORY
 
 
 class CourseUtil:

@@ -1,13 +1,12 @@
+from typing import List
+
 from app.adapters.database.database import SessionLocal
-from app.adapters.database.categoriesModel import CategoryDTO
+from app.adapters.http.util.categoryUtil import CategoryUtil
+from app.core.logger import logger
 from app.domain.categories.category import Category, CategoryBase
 from app.domain.categories.categoryRepository import CategoryRepository
-from fastapi import Depends, APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
-from app.core.logger import logger
-from app.adapters.http.util.categoryUtil import CategoryUtil
-
 
 router = APIRouter(tags=["categories"])
 
@@ -39,7 +38,7 @@ def read_category(categoryId, skip: int = 0, limit: int = 100, db: Session = Dep
     return category
 
 
-@router.get("/categories/all/", response_model=List[Category])
+@router.get("/categories/all", response_model=List[Category])
 def read_all_categories(db: Session = Depends(get_db)):
     logger.info("Getting all categories")
     repo = CategoryRepository(db)

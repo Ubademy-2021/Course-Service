@@ -1,7 +1,6 @@
-from sqlalchemy.orm import Session
-
 from app.adapters.database.suscriptionCoursesModel import SuscriptionCourseDTO
 from app.domain.suscriptionCourses.suscriptionCourse import SuscriptionCourse
+from sqlalchemy.orm import Session
 
 
 class SuscriptionCourseRepository:

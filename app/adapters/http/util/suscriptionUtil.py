@@ -1,8 +1,9 @@
 from app.adapters.http.util.courseUtil import CourseUtil
-from app.domain.suscriptionCourses.suscriptionCourse import SuscriptionCourse
-from app.domain.suscriptionCourses.suscriptionCourseRepository import SuscriptionCourseRepository
-from app.domain.suscriptions.suscriptionRepository import SuscriptionRepository
 from app.core.logger import logger
+from app.domain.suscriptionCourses.suscriptionCourse import SuscriptionCourse
+from app.domain.suscriptionCourses.suscriptionCourseRepository import \
+    SuscriptionCourseRepository
+from app.domain.suscriptions.suscriptionRepository import SuscriptionRepository
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 

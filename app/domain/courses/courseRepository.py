@@ -1,7 +1,7 @@
-from sqlalchemy.orm import Session
-from app.domain.courses.course import CourseCreate, Course
 from app.adapters.database.coursesModel import CourseDTO
+from app.domain.courses.course import Course, CourseCreate
 from app.domain.exceptions import CourseNotFoundError
+from sqlalchemy.orm import Session
 
 
 class CourseRepository:

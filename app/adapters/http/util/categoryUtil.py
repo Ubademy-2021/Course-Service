@@ -1,5 +1,5 @@
-from app.domain.categories.categoryRepository import CategoryRepository
 from app.core.logger import logger
+from app.domain.categories.categoryRepository import CategoryRepository
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 

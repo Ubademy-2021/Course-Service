@@ -1,8 +1,8 @@
-from sqlalchemy import Column, Integer, Boolean
-from sqlalchemy.orm import relationship
-from sqlalchemy.sql.schema import ForeignKey
 from app.adapters.database.database import Base
 from app.domain.collaborators.collaborator import CollaboratorCreate
+from sqlalchemy import Boolean, Column, Integer
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.schema import ForeignKey
 
 
 class CollaboratorDTO(Base):
