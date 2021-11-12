@@ -31,7 +31,7 @@ def read_categories(skip: int = 0, limit: int = 100, db: Session = Depends(get_d
     return categories
 
 
-@router.get("/categories/{categoryId}", response_model=List[Category])
+@router.get("/categories/{categoryId}", response_model=Category)
 def read_category(categoryId, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     logger.info("Getting category " + str(categoryId))
     category = CategoryUtil.check_category_exists(db, categoryId)
