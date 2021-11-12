@@ -9,16 +9,6 @@ def test_get_courses():
     assert response.status_code == 200
 
 
-def test_get_categories():
-    response = client.get("/api/categories")
-    assert response.status_code == 200
-
-
-def test_get_suscriptions():
-    response = client.get("/api/suscriptions")
-    assert response.status_code == 200
-
-
 def test_get_course_id_1():
     response = client.get("/api/courses?course_id=1")
     assert response.status_code == 200
