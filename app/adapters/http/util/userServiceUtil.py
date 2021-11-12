@@ -22,7 +22,7 @@ class UserServiceUtil:
 
         categories_id = []
         for item in response:
-            categories_id.append(item['categoryId'])
+            categories_id.append(item['id'])
 
         # Return user
         return categories_id
