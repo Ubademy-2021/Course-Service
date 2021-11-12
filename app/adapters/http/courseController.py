@@ -66,6 +66,7 @@ def read_courses(
     course_id: Optional[int] = None,
     active: Optional[bool] = None,
     category_id: Optional[int] = None,
+    suscription_id: Optional[int] = None,
     db: Session = Depends(get_db)
 ):
     repo = CourseRepository(db)
@@ -76,14 +77,20 @@ def read_courses(
         courses = []
         courses.append(repo.get_course(course_id))
         return courses
-    elif active:
+    elif active == True:
         logger.info("Getting active courses")
         return repo.get_active_courses(skip=skip, limit=limit)
     elif category_id:
-        logger.info("Getting course with category ig = " + str(category_id))
+        logger.info("Getting course with category id = " + str(category_id))
         repo = CourseCategoryRepository(db)
         courses = repo.get_courses_by_category(category_id, skip=skip, limit=limit)
         logger.debug("Got " + str(len(courses)) + " courses for category id: " + str(category_id))
+        return list(map(CourseCategoryDTO.getCourse, courses))
+    elif suscription_id:
+        logger.info("Getting course with suscription id = " + str(category_id))
+        repo = SuscriptionCourseRepository(db)
+        courses = repo.get_courses_by_suscription(suscription_id, skip=skip, limit=limit)
+        logger.debug("Got " + str(len(courses)) + " courses for suscription id: " + str(category_id))
         return list(map(CourseCategoryDTO.getCourse, courses))
 
     logger.info("Getting all courses")
