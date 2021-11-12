@@ -61,7 +61,7 @@ def update_course(course_id: int, course_updated: CourseBase, db: Session = Depe
 
 @router.get("/courses")
 def read_courses(
-    skip: int = 0, 
+    skip: int = 0,
     limit: int = 100,
     course_id: Optional[int] = None,
     active: Optional[bool] = None,
