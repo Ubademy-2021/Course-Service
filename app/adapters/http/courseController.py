@@ -59,7 +59,7 @@ def update_course(course_id: int, course_updated: CourseBase, db: Session = Depe
     return course_updated
 
 
-@router.get("/courses", response_model=List[Course])
+@router.get("/courses")
 def read_courses(
     skip: int = 0, 
     limit: int = 100,
@@ -70,31 +70,38 @@ def read_courses(
     db: Session = Depends(get_db)
 ):
     repo = CourseRepository(db)
+    courses = []
 
     if course_id:
         logger.info("Getting course with id = " + str(course_id))
+
         CourseUtil.check_course_exists(db, course_id)
-        courses = []
         courses.append(repo.get_course(course_id))
-        return courses
     elif active == True:
         logger.info("Getting active courses")
-        return repo.get_active_courses(skip=skip, limit=limit)
+
+        courses = repo.get_active_courses(skip=skip, limit=limit)
     elif category_id:
         logger.info("Getting course with category id = " + str(category_id))
+
         repo = CourseCategoryRepository(db)
         courses = repo.get_courses_by_category(category_id, skip=skip, limit=limit)
         logger.debug("Got " + str(len(courses)) + " courses for category id: " + str(category_id))
-        return list(map(CourseCategoryDTO.getCourse, courses))
+
+        courses = list(map(CourseCategoryDTO.getCourse, courses))
     elif suscription_id:
         logger.info("Getting course with suscription id = " + str(category_id))
+
         repo = SuscriptionCourseRepository(db)
         courses = repo.get_courses_by_suscription(suscription_id, skip=skip, limit=limit)
         logger.debug("Got " + str(len(courses)) + " courses for suscription id: " + str(category_id))
-        return list(map(CourseCategoryDTO.getCourse, courses))
 
-    logger.info("Getting all courses")
-    return (repo.get_courses(skip=skip, limit=limit))
+        courses = list(map(CourseCategoryDTO.getCourse, courses))
+    else:
+        logger.info("Getting all courses")
+        courses = repo.get_courses(skip=skip, limit=limit)
+
+    return CourseUtil.getCoursesForResponse(courses)
     
 
 @router.get("/courses/suscription/{suscriptionId}", response_model=List[Course])

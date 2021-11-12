@@ -1,9 +1,11 @@
 from typing import Dict, List
 
 from app.adapters.database.coursesModel import CourseDTO
+from app.adapters.database.suscriptionCoursesModel import SuscriptionCourseDTO
 from app.adapters.http.util.categoryUtil import CategoryUtil
 from app.adapters.http.util.userServiceUtil import UserServiceUtil
 from app.domain.categories.categoryRepository import CategoryRepository
+from app.adapters.database.courseCategoriesModel import CourseCategoryDTO
 from app.domain.courseCategories.courseCategory import CourseCategoryCreate
 from app.domain.courseCategories.courseCategoryRepository import CourseCategoryRepository
 from app.domain.courses.courseRepository import CourseRepository
@@ -110,3 +112,15 @@ class CourseUtil:
                             recommendations[course] = SCORE_SAME_COUNTRY
 
         return recommendations
+
+    def getCoursesForResponse(courses: List[CourseDTO]):
+        courses_full_info = []
+        
+        for course in courses:
+            dict = course.__dict__
+            dict['categories'] = list(map(CourseCategoryDTO.getCategory, course.categories))
+            dict['suscriptions'] = list(map(SuscriptionCourseDTO.getSuscription, course.suscriptions))
+
+            courses_full_info.append(dict)
+
+        return courses_full_info

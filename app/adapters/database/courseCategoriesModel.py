@@ -21,3 +21,6 @@ class CourseCategoryDTO(Base):
 
     def getCourse(self):
         return self.course
+
+    def getCategory(self):
+        return self.category
