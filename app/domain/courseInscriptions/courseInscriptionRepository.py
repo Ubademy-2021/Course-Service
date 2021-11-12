@@ -14,6 +14,9 @@ class CourseInscriptionRepository:
     def get_students_by_course(self, course_id: int, skip: int = 0, limit: int = 100):
         return self.session.query(CourseInscriptionDTO).filter(CourseInscriptionDTO.courseId == course_id).filter(CourseInscriptionDTO.status == 'Active').offset(skip).limit(limit).all()
 
+    def get_courses_by_student(self, user_id: int, skip: int = 0, limit: int = 100):
+        return self.session.query(CourseInscriptionDTO).filter(CourseInscriptionDTO.userId == user_id).filter(CourseInscriptionDTO.status == 'Active').offset(skip).limit(limit).all()
+
     def get_courseInscriptions(self, skip: int = 0, limit: int = 100):
         return self.session.query(CourseInscriptionDTO).offset(skip).limit(limit).all()
 
