@@ -31,7 +31,7 @@ class CourseUtil:
         db_course = courseRepository.get_course(course_id=course_id)
         if db_course is None:
             logger.warning("Course with id = " + str(course_id) + " not found")
-            raise HTTPException(status_code=404, detail="Course not found")
+            raise HTTPException(status_code=400, detail="Course not found")
         return db_course
 
     def check_course_exists(session: Session, id):

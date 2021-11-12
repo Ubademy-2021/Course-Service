@@ -24,7 +24,7 @@ class SuscriptionUtil:
         db_suscription = suscriptionRepository.get_suscription(suscription_id=suscription_id)
         if db_suscription is None:
             logger.warning("Suscription with id = " + str(suscription_id) + " not found")
-            raise HTTPException(status_code=404, detail="Suscription not found")
+            raise HTTPException(status_code=400, detail="Suscription not found")
         return db_suscription
 
     def check_suscription_exists(session: Session, id):

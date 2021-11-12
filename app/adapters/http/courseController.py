@@ -58,7 +58,7 @@ def update_course(course_id: int, course_updated: CourseBase, db: Session = Depe
     try:
         course_updated = repo.update_course(course_id, course_updated)
     except CourseNotFoundError as e:
-        raise HTTPException(status_code=404, detail=e.message)
+        raise HTTPException(status_code=400, detail=e.message)
 
     logger.info("Course course with id " + str(course_id) + " updates successfully")
     return course_updated
