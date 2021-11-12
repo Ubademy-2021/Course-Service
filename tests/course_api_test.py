@@ -16,7 +16,7 @@ def test_get_course_id_1():
 
 def test_get_course_id_not_exists():
     response = client.get("/api/courses?course_id=2342342342342")
-    assert response.status_code != 200
+    assert response.status_code == 400
 
 
 def test_get_courses_active_true():
@@ -47,3 +47,26 @@ def test_get_courses_active():
 def test_get_course_recommendation_id_1():
     response = client.get("/api/courses/recommendation/1")
     assert response.status_code == 200
+
+
+def test_cancel_course_already_cancelled():
+    response = client.put("/api/courses/cancel/1")
+    assert response.status_code == 400
+
+
+def test_post_course_category_bad_course():
+    response = client.post("/api/courses/category",
+                           json={
+                               "courseId": 121242352351,
+                               "categoryId": 1
+                           })
+    assert response.status_code == 400
+
+
+def test_post_course_category_bad_category():
+    response = client.post("/api/courses/category",
+                           json={
+                               "courseId": 1,
+                               "categoryId": 121242352351
+                           })
+    assert response.status_code == 400
