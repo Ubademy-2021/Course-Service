@@ -12,6 +12,7 @@ from app.domain.suscriptionInscriptions.suscriptionInscription import (
     SuscriptionInscription, SuscriptionInscriptionCreate)
 from app.domain.suscriptionInscriptions.suscriptionInscriptionRepository import \
     SuscriptionInscriptionRepository
+from app.domain.suscriptions.suscription import Suscription
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -74,7 +75,7 @@ def create_suscription_inscription(suscriptionInscription: SuscriptionInscriptio
     return repo.create_suscriptionInscription(suscriptionInscription)
 
 
-@router.get("/suscriptions/inscription/{user_id}", response_model=SuscriptionInscription)
+@router.get("/suscriptions/inscription/{user_id}", response_model=Suscription)
 def read_user_suscription(user_id: int, db: Session = Depends(get_db)):
     logger.info("Getting suscription from user " + str(user_id))
     repo = SuscriptionInscriptionRepository(db)
@@ -84,4 +85,4 @@ def read_user_suscription(user_id: int, db: Session = Depends(get_db)):
     suscriptionInscription = repo.get_suscriptionInscription(user_id)
     if not suscriptionInscription:
         suscriptionInscription = SuscriptionInscriptionUtil.makeDefaultSuscription(user_id)
-    return suscriptionInscription
+    return suscriptionInscription.suscription
