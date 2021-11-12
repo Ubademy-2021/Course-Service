@@ -61,7 +61,7 @@ def update_course(course_id: int, course_updated: CourseBase, db: Session = Depe
 
 @router.get("/courses")
 def read_courses(
-    skip: int = 0, 
+    skip: int = 0,
     limit: int = 100,
     course_id: Optional[int] = None,
     active: Optional[bool] = None,
@@ -77,7 +77,7 @@ def read_courses(
 
         CourseUtil.check_course_exists(db, course_id)
         courses.append(repo.get_course(course_id))
-    elif active == True:
+    elif active:
         logger.info("Getting active courses")
 
         courses = repo.get_active_courses(skip=skip, limit=limit)
@@ -102,7 +102,7 @@ def read_courses(
         courses = repo.get_courses(skip=skip, limit=limit)
 
     return CourseUtil.getCoursesForResponse(courses)
-    
+
 
 @router.get("/courses/suscription/{suscriptionId}", response_model=List[Course])
 def read_courses_from_suscription(
