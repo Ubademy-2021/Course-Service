@@ -21,3 +21,6 @@ class SuscriptionCourseDTO(Base):
 
     def getCourse(self):
         return self.course
+
+    def getSuscription(self):
+        return self.suscription
