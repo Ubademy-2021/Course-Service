@@ -26,7 +26,7 @@ class CourseInscriptionUtil:
 
         courseInscriptionRepository = CourseInscriptionRepository(session)
         db_courseInscription = courseInscriptionRepository.get_courseInscription(courseInscription.courseId, courseInscription.userId)
-        if db_courseInscription:
+        if db_courseInscription and db_courseInscription.status == "Active":
             logger.warning("Inscription already exists")
             raise HTTPException(
                 status_code=400, detail="Inscription already exists"
