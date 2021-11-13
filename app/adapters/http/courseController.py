@@ -153,9 +153,9 @@ def add_category_to_course(courseCategory: CourseCategoryCreate, db: Session = D
     return repo.create_courseCategory(courseCategory)
 
 
-@router.get("/courses/recommendation/{user_id}", response_model=List[Course])
+@router.get("/courses/recommendation/{user_id}")
 def get_course_recomendation(user_id: int, db: Session = Depends(get_db)):
     logger.info("Getting courses recommendation for user with id " + str(user_id))
     courses_to_recommend = CourseUtil.get_course_recomendation(db, user_id)
 
-    return courses_to_recommend
+    return CourseUtil.getCoursesForResponse(courses_to_recommend)

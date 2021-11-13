@@ -1,6 +1,8 @@
 from app.adapters.database.courseInscriptionsModel import CourseInscriptionDTO
+from app.core.logger import logger
 from app.domain.courseInscriptions.courseInscription import \
     CourseInscriptionCreate
+from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 
 
@@ -23,9 +25,14 @@ class CourseInscriptionRepository:
     def create_courseInscription(self, courseInscription: CourseInscriptionCreate):
         session_courseInscription = CourseInscriptionDTO()
         session_courseInscription.initWithCourseInscriptionCreate(courseInscription)
-        self.session.add(session_courseInscription)
-        self.session.commit()
-        self.session.refresh(session_courseInscription)
+        db_inscription = self.get_courseInscription(courseInscription.courseId, courseInscription.userId)
+        if (db_inscription):
+            db_inscription.status = 'Active'
+            self.update_courseInscription_with_id(db_inscription)
+        else:
+            self.session.add(session_courseInscription)
+            self.session.commit()
+            self.session.refresh(session_courseInscription)
         return session_courseInscription
 
     def update_courseInscription_with_id(self, courseInscription_updated: CourseInscriptionDTO):
