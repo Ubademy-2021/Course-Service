@@ -14,6 +14,12 @@ class CollaboratorRepository:
     def get_collaborators_by_course(self, course_id: int, skip: int = 0, limit: int = 100):
         return self.session.query(CollaboratorDTO).filter(CollaboratorDTO.courseId == course_id).offset(skip).limit(limit).all()
 
+    def get_courses_by_collaborator(self, collaborator_id: int, skip: int = 0, limit: int = 100):
+        return self.session.query(CollaboratorDTO).filter(CollaboratorDTO.userId == collaborator_id).offset(skip).limit(limit).all()
+
+    def get_courses_by_owner(self, owner_id: int, skip: int = 0, limit: int = 100):
+        return self.session.query(CollaboratorDTO).filter(CollaboratorDTO.userId == owner_id).filter(CollaboratorDTO.isOwner == True).offset(skip).limit(limit).all()
+
     def get_collaborators(self, skip: int = 0, limit: int = 100):
         return self.session.query(CollaboratorDTO).offset(skip).limit(limit).all()
 
