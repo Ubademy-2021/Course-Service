@@ -1,5 +1,3 @@
-from typing import List
-
 from app.adapters.database.collaboratorsModel import CollaboratorDTO
 from app.adapters.database.database import SessionLocal
 from app.adapters.http.util.collaboratorUtil import CollaboratorUtil

@@ -124,3 +124,17 @@ class CourseUtil:
             courses_full_info.append(dict)
 
         return courses_full_info
+
+    def cancelCourse(session: Session, course_id: int, throw=True):
+        logger.info("Cancelling course " + str(course_id))
+        repo = CourseRepository(session)
+        db_course = CourseUtil.check_id_exists(session, course_id)
+        if(db_course.status == 'Cancelled'):
+            logger.warning("Course " + str(course_id) + " already cancelled")
+            if throw:
+                raise HTTPException(
+                    status_code=400, detail=("Course " + str(course_id) + " already cancelled")
+                )
+        db_course.status = 'Cancelled'
+        repo.update_course_with_id(db_course)
+        return db_course

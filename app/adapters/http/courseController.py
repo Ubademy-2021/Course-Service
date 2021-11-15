@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+from app.adapters.database.collaboratorsModel import CollaboratorDTO
 from app.adapters.database.courseCategoriesModel import CourseCategoryDTO
 from app.adapters.database.courseInscriptionsModel import CourseInscriptionDTO
 from app.adapters.database.database import SessionLocal
@@ -7,6 +8,8 @@ from app.adapters.database.suscriptionCoursesModel import SuscriptionCourseDTO
 from app.adapters.http.util.collaboratorUtil import CollaboratorUtil
 from app.adapters.http.util.courseUtil import CourseUtil
 from app.core.logger import logger
+from app.domain.collaborators.collaboratorRepository import \
+    CollaboratorRepository
 from app.domain.courseCategories.courseCategory import (CourseCategory,
                                                         CourseCategoryCreate)
 from app.domain.courseCategories.courseCategoryRepository import \
@@ -73,6 +76,8 @@ def read_courses(
     category_id: Optional[int] = None,
     suscription_id: Optional[int] = None,
     user_id: Optional[int] = None,
+    collaborator_id: Optional[int] = None,
+    owner_id: Optional[int] = None,
     db: Session = Depends(get_db)
 ):
     repo = CourseRepository(db)
@@ -111,6 +116,22 @@ def read_courses(
         logger.debug("Got " + str(len(courses)) + " courses for user id: " + str(user_id))
 
         courses = list(map(CourseInscriptionDTO.getCourse, courses))
+    elif collaborator_id:
+        logger.info("Getting courses in which user " + str(collaborator_id) + " is a collaborator")
+
+        repo = CollaboratorRepository(db)
+        courses = repo.get_courses_by_collaborator(collaborator_id, skip=skip, limit=limit)
+        logger.debug("Got " + str(len(courses)) + " courses for user id: " + str(collaborator_id))
+
+        courses = list(map(CollaboratorDTO.getCourse, courses))
+    elif owner_id:
+        logger.info("Getting courses in which user " + str(owner_id) + " is owner")
+
+        repo = CollaboratorRepository(db)
+        courses = repo.get_courses_by_owner(owner_id, skip=skip, limit=limit)
+        logger.debug("Got " + str(len(courses)) + " courses for user id: " + str(owner_id))
+
+        courses = list(map(CollaboratorDTO.getCourse, courses))
     else:
         logger.info("Getting all courses")
         courses = repo.get_courses(skip=skip, limit=limit)
@@ -129,17 +150,7 @@ def read_active_courses(db: Session = Depends(get_db)):
 
 @router.put("/courses/cancel/{course_id}", response_model=Course)
 def cancel_course(course_id: int, db: Session = Depends(get_db)):
-    logger.info("Creating course " + str(course_id))
-    repo = CourseRepository(db)
-    db_course = CourseUtil.check_id_exists(db, course_id)
-    if(db_course.status == 'Cancelled'):
-        logger.warning("Course " + str(course_id) + " already cancelled")
-        raise HTTPException(
-            status_code=400, detail=("Course " + str(course_id) + " already cancelled")
-        )
-    db_course.status = 'Cancelled'
-    repo.update_course_with_id(db_course)
-    return db_course
+    return CourseUtil.cancelCourse(db, course_id)
 
 
 @router.post("/courses/category", response_model=CourseCategory)
