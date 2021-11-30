@@ -116,6 +116,8 @@ class CourseUtil:
     def getCoursesForResponse(courses: List[CourseDTO]):
         courses_full_info = []
 
+        courses = set(courses)
+
         for course in courses:
             dict = course.__dict__
             dict['categories'] = list(map(CourseCategoryDTO.getCategory, course.categories))

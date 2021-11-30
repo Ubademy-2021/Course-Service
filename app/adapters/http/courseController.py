@@ -7,6 +7,7 @@ from app.adapters.database.database import SessionLocal
 from app.adapters.database.suscriptionCoursesModel import SuscriptionCourseDTO
 from app.adapters.http.util.collaboratorUtil import CollaboratorUtil
 from app.adapters.http.util.courseUtil import CourseUtil
+from app.adapters.http.util.suscriptionUtil import SuscriptionUtil
 from app.core.logger import logger
 from app.domain.collaborators.collaboratorRepository import \
     CollaboratorRepository
@@ -48,6 +49,7 @@ def create_course(course: CourseCreate, db: Session = Depends(get_db)):
     CourseUtil.check_coursename(db, course.courseName)
     db_course = repo.create_course(course=course)
     CollaboratorUtil.createOwner(db, db_course, course.ownerId)
+    SuscriptionUtil.make_default_course_suscription(db, db_course.id)
     return db_course
 
 
@@ -107,7 +109,7 @@ def read_courses(
         courses = repo.get_courses_by_suscription(suscription_id, skip=skip, limit=limit)
         logger.debug("Got " + str(len(courses)) + " courses for suscription id: " + str(suscription_id))
 
-        courses = list(map(CourseCategoryDTO.getCourse, courses))
+        courses = list(map(SuscriptionCourseDTO.getCourse, courses))
     elif user_id:
         logger.info("Getting courses in which user " + str(user_id) + " is a student")
 

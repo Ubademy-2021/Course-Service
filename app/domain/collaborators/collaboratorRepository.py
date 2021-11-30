@@ -23,6 +23,9 @@ class CollaboratorRepository:
     def get_collaborators(self, skip: int = 0, limit: int = 100):
         return self.session.query(CollaboratorDTO).offset(skip).limit(limit).all()
 
+    def get_all_collaborators(self):
+        return self.session.query(CollaboratorDTO).all()
+
     def create_collaborator(self, collaborator: CollaboratorCreate):
         session_collaborator = CollaboratorDTO()
         session_collaborator.initWithCollaboratorCreate(collaborator)

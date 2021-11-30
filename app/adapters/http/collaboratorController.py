@@ -24,6 +24,15 @@ def get_db():
         db.close()
 
 
+@router.get("/collaborators")
+def read_all_collaborators(db: Session = Depends(get_db)):
+    logger.info("Getting all collaborators")
+    repo = CollaboratorRepository(db)
+    collaborators = repo.get_all_collaborators()
+    logger.debug("Getting " + str(len(collaborators)) + " collaborators")
+    return UserServiceUtil.getUsersWithIds(list(set(map(CollaboratorDTO.getUserId, collaborators))))
+
+
 @router.post("/collaborators", response_model=Collaborator)
 def create_collaborator(collaborator: CollaboratorCreate, db: Session = Depends(get_db)):
     logger.info("Creating collaborator")
