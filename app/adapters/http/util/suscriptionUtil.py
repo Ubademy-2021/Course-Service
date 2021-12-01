@@ -1,3 +1,4 @@
+from app.adapters.database.suscriptionCoursesModel import SuscriptionCourseDTO
 from app.adapters.http.util.courseUtil import CourseUtil
 from app.core.logger import logger
 from app.domain.suscriptionCourses.suscriptionCourse import SuscriptionCourse
@@ -40,10 +41,12 @@ class SuscriptionUtil:
 
         SuscriptionUtil.check_suscription_exists(session, suscriptionCourse.suscriptionId)
 
-        suscriptionCourseRepository = SuscriptionCourseRepository(session)
-        db_suscription_course = suscriptionCourseRepository.get_suscription_course(
-            suscriptionCourse.courseId, suscriptionCourse.suscriptionId
+    def make_default_course_suscription(session: Session, courseId):
+
+        repo = SuscriptionCourseRepository(session)
+
+        suscriptionCourse = SuscriptionCourse(
+            suscriptionId=1,
+            courseId=courseId
         )
-        if db_suscription_course:
-            logger.warning("Suscription already has course")
-            raise HTTPException(status_code=400, detail="Suscription already has course")
+        repo.create_suscription_course(suscriptionCourse)

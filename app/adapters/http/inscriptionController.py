@@ -84,5 +84,5 @@ def read_user_suscription(user_id: int, db: Session = Depends(get_db)):
 
     suscriptionInscription = repo.get_suscriptionInscription(user_id)
     if not suscriptionInscription:
-        suscriptionInscription = SuscriptionInscriptionUtil.makeDefaultSuscription(user_id)
+        suscriptionInscription = SuscriptionInscriptionUtil.makeDefaultSuscription(db, user_id)
     return suscriptionInscription.suscription
