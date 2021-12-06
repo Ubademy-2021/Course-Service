@@ -122,6 +122,10 @@ class CourseUtil:
             dict = course.__dict__
             dict['categories'] = list(map(CourseCategoryDTO.getCategory, course.categories))
             dict['suscriptions'] = list(map(SuscriptionCourseDTO.getSuscription, course.suscriptions))
+            for collaborator in course.collaborators:
+                if collaborator.isOwner:
+                    dict['owner'] = UserServiceUtil.check_user_exists(collaborator.userId)
+
 
             courses_full_info.append(dict)
 
