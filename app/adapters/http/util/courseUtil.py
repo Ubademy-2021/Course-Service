@@ -126,7 +126,6 @@ class CourseUtil:
                 if collaborator.isOwner:
                     dict['owner'] = UserServiceUtil.check_user_exists(collaborator.userId)
 
-
             courses_full_info.append(dict)
 
         return courses_full_info
