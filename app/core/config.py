@@ -10,5 +10,7 @@ DATABASE_URL = f"postgres://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER
 
 HEROKU_USER_SERVICE_BASE_URL = os.environ.get('HEROKU_USER_SERVICE_BASE_URL', "https://ubademy-user-service.herokuapp.com")
 
+HEROKU_PAYMENTS_SERVICE_BASE_URL = os.environ.get('HEROKU_PAYMENTS_SERVICE_BASE_URL', "https://ubademy-payments-service.herokuapp.com")
+
 SCORE_SAME_CATEGORY = 3
 SCORE_SAME_COUNTRY = SCORE_SAME_CATEGORY * 3

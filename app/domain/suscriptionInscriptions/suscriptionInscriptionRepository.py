@@ -18,6 +18,9 @@ class SuscriptionInscriptionRepository:
     def create_suscriptionInscription(self, suscriptionInscription: SuscriptionInscriptionCreate):
         session_suscriptionInscription = SuscriptionInscriptionDTO()
         session_suscriptionInscription.initWithSuscriptionInscriptionCreate(suscriptionInscription)
+        si = self.get_suscriptionInscription(suscriptionInscription.userId)
+        if si:
+            self.session.delete(si)
         self.session.add(session_suscriptionInscription)
         self.session.commit()
         self.session.refresh(session_suscriptionInscription)

@@ -2,6 +2,7 @@ from app.adapters.database.courseInscriptionsModel import CourseInscriptionDTO
 from app.adapters.database.database import SessionLocal
 from app.adapters.http.util.inscriptionsUtil import (
     CourseInscriptionUtil, SuscriptionInscriptionUtil)
+from app.adapters.http.util.paymentsServiceUtil import PaymentsServiceUtil
 from app.adapters.http.util.userServiceUtil import UserServiceUtil
 from app.core.logger import logger
 from app.domain.courseInscriptions.courseInscription import (
@@ -72,6 +73,7 @@ def create_suscription_inscription(suscriptionInscription: SuscriptionInscriptio
         raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = SuscriptionInscriptionRepository(db)
     SuscriptionInscriptionUtil.check_suscriptionInscription(db, suscriptionInscription)
+    PaymentsServiceUtil.changeSuscriptionPayment(suscriptionInscription.userId, suscriptionInscription.suscriptionId)
     return repo.create_suscriptionInscription(suscriptionInscription)
 
 

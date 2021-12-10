@@ -25,14 +25,3 @@ class CollaboratorUtil:
             raise HTTPException(
                 status_code=400, detail="Collaborator already exists"
             )
-
-    def createOwner(session: Session, course: CourseDTO, ownerId: int):
-
-        UserServiceUtil.check_user_exists(ownerId)
-
-        collaborator = CollaboratorDTO()
-        collaborator.courseId = course.id
-        collaborator.userId = ownerId
-        collaborator.isOwner = True
-        repo = CollaboratorRepository(session)
-        return repo.add_collaborator(collaborator)

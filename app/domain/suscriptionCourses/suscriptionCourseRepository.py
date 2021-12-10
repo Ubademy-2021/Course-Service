@@ -30,7 +30,7 @@ class SuscriptionCourseRepository:
             .filter(SuscriptionCourseDTO.courseId == courseId)
             .offset(skip)
             .limit(limit)
-            .one_or_none()
+            .first()
         )
 
     def create_suscription_course(self, suscriptionCourse: SuscriptionCourse):
