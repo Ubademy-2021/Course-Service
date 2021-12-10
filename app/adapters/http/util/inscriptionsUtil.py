@@ -70,14 +70,6 @@ class SuscriptionInscriptionUtil:
 
         SuscriptionUtil.check_suscription_exists(session, suscriptionInscription.suscriptionId)
 
-        suscriptionInscriptionRepository = SuscriptionInscriptionRepository(session)
-        db_suscriptionInscription = suscriptionInscriptionRepository.get_suscriptionInscription(suscriptionInscription.userId)
-        if db_suscriptionInscription:
-            logger.warning("Inscription already exists")
-            raise HTTPException(
-                status_code=400, detail="Inscription already exists"
-            )
-
     def makeDefaultSuscription(session: Session, userId: int):
         suscriptionInscription = SuscriptionInscriptionDTO()
         suscriptionInscription.suscriptionId = 1

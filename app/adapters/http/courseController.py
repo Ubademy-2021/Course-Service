@@ -147,7 +147,7 @@ def read_active_courses(db: Session = Depends(get_db)):
     crud = CourseRepository(db)
     courses = crud.get_all_active_courses()
     logger.debug("Getting " + str(len(courses)) + " courses")
-    return courses
+    return CourseUtil.getCoursesForResponse(courses)
 
 
 @router.put("/courses/cancel/{course_id}", response_model=Course)
