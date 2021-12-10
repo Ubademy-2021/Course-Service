@@ -41,12 +41,12 @@ class SuscriptionUtil:
 
         SuscriptionUtil.check_suscription_exists(session, suscriptionCourse.suscriptionId)
 
-    def make_default_course_suscription(session: Session, courseId):
+    def make_course_suscription(session: Session, courseId, suscriptionId):
 
         repo = SuscriptionCourseRepository(session)
 
         suscriptionCourse = SuscriptionCourse(
-            suscriptionId=1,
+            suscriptionId=suscriptionId,
             courseId=courseId
         )
         repo.create_suscription_course(suscriptionCourse)

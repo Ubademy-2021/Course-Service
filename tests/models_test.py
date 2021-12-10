@@ -58,7 +58,10 @@ def make_default_courseCreate():
         courseName="str",
         duration="16:00:00",
         inscriptionPrice=14,
-        ownerId=1
+        description="str",
+        ownerId=1,
+        suscriptionId=1,
+        categoryIds=[]
     )
     return course
 

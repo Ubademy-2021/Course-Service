@@ -1,5 +1,8 @@
 from app.core.logger import logger
 from app.domain.categories.categoryRepository import CategoryRepository
+from app.domain.courseCategories.courseCategory import CourseCategoryCreate
+from app.domain.courseCategories.courseCategoryRepository import \
+    CourseCategoryRepository
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
@@ -22,3 +25,12 @@ class CategoryUtil:
             logger.warning("Category does not exist")
             raise HTTPException(status_code=400, detail="Category does not exist")
         return category
+
+    def createCourseCategory(session: Session, courseId, categoryId):
+        repo = CourseCategoryRepository(session)
+
+        courseCategory = CourseCategoryCreate(
+            courseId=courseId,
+            categoryId=categoryId
+        )
+        repo.create_courseCategory(courseCategory)

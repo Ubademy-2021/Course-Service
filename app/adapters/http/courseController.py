@@ -6,6 +6,7 @@ from app.adapters.database.courseInscriptionsModel import CourseInscriptionDTO
 from app.adapters.database.database import SessionLocal
 from app.adapters.database.suscriptionCoursesModel import SuscriptionCourseDTO
 from app.adapters.http.util.collaboratorUtil import CollaboratorUtil
+from app.adapters.http.util.courseCreateUtil import CourseCreateUtil
 from app.adapters.http.util.courseUtil import CourseUtil
 from app.adapters.http.util.suscriptionUtil import SuscriptionUtil
 from app.core.logger import logger
@@ -39,21 +40,17 @@ def get_db():
         db.close()
 
 
-@router.post("/courses", response_model=Course)
+@router.post("/courses")
 def create_course(course: CourseCreate, db: Session = Depends(get_db)):
     logger.info("Creating course " + course.courseName)
     if not course.isComplete():
         logger.warning("Required fields are not complete")
         raise HTTPException(status_code=400, detail="Required fields are not complete")
-    repo = CourseRepository(db)
-    CourseUtil.check_coursename(db, course.courseName)
-    db_course = repo.create_course(course=course)
-    CollaboratorUtil.createOwner(db, db_course, course.ownerId)
-    SuscriptionUtil.make_default_course_suscription(db, db_course.id)
-    return db_course
+    course = CourseCreateUtil.createCourse(db, course)
+    return CourseUtil.getCoursesForResponse([course])
 
 
-@router.put("/courses/{course_id}", response_model=Course)
+@router.put("/courses/{course_id}")
 def update_course(course_id: int, course_updated: CourseBase, db: Session = Depends(get_db)):
     logger.info("Updating course with id " + str(course_id))
 
@@ -66,7 +63,7 @@ def update_course(course_id: int, course_updated: CourseBase, db: Session = Depe
         raise HTTPException(status_code=400, detail=e.message)
 
     logger.info("Course course with id " + str(course_id) + " updates successfully")
-    return course_updated
+    return CourseUtil.getCoursesForResponse([course_updated])
 
 
 @router.get("/courses")
@@ -141,7 +138,7 @@ def read_courses(
     return CourseUtil.getCoursesForResponse(courses)
 
 
-@router.get("/courses/active", response_model=List[Course])
+@router.get("/courses/active")
 def read_active_courses(db: Session = Depends(get_db)):
     logger.info("Getting active course list")
     crud = CourseRepository(db)

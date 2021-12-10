@@ -28,9 +28,6 @@ def get_db():
 @router.post("/suscriptions", response_model=Suscription)
 def create_suscription(suscription: SuscriptionCreate, db: Session = Depends(get_db)):
     logger.info("Creating suscription " + suscription.description)
-    if not suscription.isComplete():
-        logger.warning("Required fields are not complete")
-        raise HTTPException(status_code=400, detail="Required fields are not complete")
     repo = SuscriptionRepository(db)
     SuscriptionUtil.check_description(db, suscription.description)
     return repo.create_suscription(suscription=suscription)
