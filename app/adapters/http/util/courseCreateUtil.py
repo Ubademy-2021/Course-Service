@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 class CourseCreateUtil:
 
     def createCourse(session: Session, course: CourseCreate):
-        CourseUtil.check_coursename(session, course.courseName)
+        CourseUtil.check_coursename(session, course.courseName, 0)
 
         SuscriptionUtil.check_suscription_exists(session, course.suscriptionId)
 

@@ -14,8 +14,6 @@ class PaymentsServiceUtil:
         data = {'senderId': userId, 'suscriptionId': suscriptionId}
         r = requests.post(url=url, json=data)
 
-        logger.info(str(r.status_code) + ": " + r.text)
-
         if r.status_code != 201:
             logger.warning("Suscription could not be changed in payments service")
             raise HTTPException(status_code=400, detail="Suscription could not be changed")

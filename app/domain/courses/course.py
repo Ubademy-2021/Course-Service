@@ -25,6 +25,10 @@ class CourseCreate(CourseBase):
         return not isNotComplete
 
 
+class CourseUpdate(CourseBase):
+    suscriptionId: int
+
+
 class Course(CourseBase):
     id: int
     createdDate: datetime.datetime

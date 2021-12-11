@@ -18,7 +18,8 @@ from app.domain.courseCategories.courseCategoryRepository import \
     CourseCategoryRepository
 from app.domain.courseInscriptions.courseInscriptionRepository import \
     CourseInscriptionRepository
-from app.domain.courses.course import Course, CourseBase, CourseCreate
+from app.domain.courses.course import (Course, CourseBase, CourseCreate,
+                                       CourseUpdate)
 from app.domain.courses.courseRepository import CourseRepository
 from app.domain.exceptions import CourseNotFoundError
 from app.domain.suscriptionCourses.suscriptionCourseRepository import \
@@ -51,16 +52,19 @@ def create_course(course: CourseCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/courses/{course_id}")
-def update_course(course_id: int, course_updated: CourseBase, db: Session = Depends(get_db)):
+def update_course(course_id: int, course_updated: CourseUpdate, db: Session = Depends(get_db)):
     logger.info("Updating course with id " + str(course_id))
 
-    CourseUtil.check_coursename(db, course_updated.courseName)
+    suscriptionId = course_updated.suscriptionId
+    CourseUtil.check_coursename(db, course_updated.courseName, course_id)
     repo = CourseRepository(db)
 
     try:
         course_updated = repo.update_course(course_id, course_updated)
     except CourseNotFoundError as e:
         raise HTTPException(status_code=400, detail=e.message)
+
+    SuscriptionUtil.make_course_suscription(db, course_id, suscriptionId)
 
     logger.info("Course course with id " + str(course_id) + " updates successfully")
     return CourseUtil.getCoursesForResponse([course_updated])

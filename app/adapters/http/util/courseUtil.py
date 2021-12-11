@@ -17,10 +17,10 @@ from sqlalchemy.orm import Session
 
 class CourseUtil:
 
-    def check_coursename(session: Session, coursename):
+    def check_coursename(session: Session, coursename, id):
         courseRepository = CourseRepository(session)
         db_course = courseRepository.get_course_by_name(coursename)
-        if db_course:
+        if db_course and id != db_course.id:
             logger.warning("Coursename " + coursename + " already in use")
             raise HTTPException(
                 status_code=400, detail="Coursename " + coursename + " already in use"
