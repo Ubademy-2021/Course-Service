@@ -1,5 +1,5 @@
 import datetime
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -7,8 +7,8 @@ from pydantic import BaseModel
 class CourseBase(BaseModel):
     courseName: str
     duration: datetime.time
-    inscriptionPrice: float
     description: str
+    videos: Optional[str]
 
 
 class CourseCreate(CourseBase):
@@ -20,7 +20,6 @@ class CourseCreate(CourseBase):
         isNotComplete = (
             not self.courseName
             or not self.duration
-            or not self.inscriptionPrice
         )
         return not isNotComplete
 

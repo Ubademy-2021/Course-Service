@@ -57,7 +57,7 @@ def make_default_courseCreate():
     course = CourseCreate(
         courseName="str",
         duration="16:00:00",
-        inscriptionPrice=14,
+        videos="str",
         description="str",
         ownerId=1,
         suscriptionId=1,
@@ -130,7 +130,6 @@ class TestModels(unittest.TestCase):
         dto.initWithCourseCreate(model)
         assert dto.courseName == model.courseName
         assert dto.duration == model.duration
-        assert dto.inscriptionPrice == model.inscriptionPrice
         assert dto.status == "Active"
         assert dto.createdDate >= start
 

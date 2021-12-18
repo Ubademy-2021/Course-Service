@@ -2,7 +2,7 @@ import datetime
 
 from app.adapters.database.database import Base
 from app.domain.courses.course import CourseCreate
-from sqlalchemy import Column, DateTime, Float, Integer, String, Time
+from sqlalchemy import Column, DateTime, Float, Integer, String, Text, Time
 from sqlalchemy.orm import relationship
 
 # catedra hacen Base=declarative_base()
@@ -16,8 +16,8 @@ class CourseDTO(Base):
     description = Column(String)
     createdDate = Column(DateTime)
     duration = Column(Time)
-    inscriptionPrice = Column(Float)
     status = Column(String)
+    videos = Column(Text)
 
     suscriptions = relationship("SuscriptionCourseDTO", back_populates="course")
     collaborators = relationship("CollaboratorDTO", back_populates="course")
@@ -30,5 +30,5 @@ class CourseDTO(Base):
         self.description = course.description
         self.createdDate = datetime.datetime.now()
         self.duration = course.duration
-        self.inscriptionPrice = course.inscriptionPrice
+        self.videos = course.videos
         self.status = "Active"

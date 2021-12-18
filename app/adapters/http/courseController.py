@@ -1,11 +1,10 @@
-from typing import List, Optional
+from typing import Optional
 
 from app.adapters.database.collaboratorsModel import CollaboratorDTO
 from app.adapters.database.courseCategoriesModel import CourseCategoryDTO
 from app.adapters.database.courseInscriptionsModel import CourseInscriptionDTO
 from app.adapters.database.database import SessionLocal
 from app.adapters.database.suscriptionCoursesModel import SuscriptionCourseDTO
-from app.adapters.http.util.collaboratorUtil import CollaboratorUtil
 from app.adapters.http.util.courseCreateUtil import CourseCreateUtil
 from app.adapters.http.util.courseUtil import CourseUtil
 from app.adapters.http.util.suscriptionUtil import SuscriptionUtil
@@ -18,8 +17,7 @@ from app.domain.courseCategories.courseCategoryRepository import \
     CourseCategoryRepository
 from app.domain.courseInscriptions.courseInscriptionRepository import \
     CourseInscriptionRepository
-from app.domain.courses.course import (Course, CourseBase, CourseCreate,
-                                       CourseUpdate)
+from app.domain.courses.course import Course, CourseCreate, CourseUpdate
 from app.domain.courses.courseRepository import CourseRepository
 from app.domain.exceptions import CourseNotFoundError
 from app.domain.suscriptionCourses.suscriptionCourseRepository import \
