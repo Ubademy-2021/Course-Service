@@ -143,3 +143,17 @@ class CourseUtil:
         db_course.status = 'Cancelled'
         repo.update_course_with_id(db_course)
         return db_course
+
+    def activateCourse(session: Session, course_id: int, throw=True):
+        logger.info("Activating course " + str(course_id))
+        repo = CourseRepository(session)
+        db_course = CourseUtil.check_id_exists(session, course_id)
+        if db_course.status == 'Active':
+            logger.warning("Course " + str(course_id) + " already active")
+            if throw:
+                raise HTTPException(
+                    status_code=400, detail=("Course " + str(course_id) + " already active")
+                )
+        db_course.status = 'Active'
+        repo.update_course_with_id(db_course)
+        return db_course

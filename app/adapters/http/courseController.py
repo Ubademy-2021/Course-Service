@@ -154,6 +154,11 @@ def cancel_course(course_id: int, db: Session = Depends(get_db)):
     return CourseUtil.cancelCourse(db, course_id)
 
 
+@router.put("/courses/activate/{course_id}", response_model=Course)
+def activate_course(course_id: int, db: Session = Depends(get_db)):
+    return CourseUtil.activateCourse(db, course_id)
+
+
 @router.post("/courses/category", response_model=CourseCategory)
 def add_category_to_course(courseCategory: CourseCategoryCreate, db: Session = Depends(get_db)):
     logger.info("Adding category to course")
