@@ -1,6 +1,6 @@
 # Course-Service
 
-This service manages all courses for Ubademy application. It relates users with courses, checking wether a user is allow to enroll a course and see it's content, according to what suscription is it currently paying.
+This service manages all courses for Ubademy application. It relates users with courses, checking wether a user is allow to enroll a course and see it's content, according to what suscription it is currently paying.
 
 ## Links of interest
 [API Documentation](https://course-service-ubademy.herokuapp.com/docs#/)
